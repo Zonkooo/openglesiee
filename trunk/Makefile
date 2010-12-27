@@ -9,7 +9,7 @@ LDFLAGS= -lglut -lGLU -lGLEW
 CFLAGS= -Wall -I. -DLINUX
 endif
 
-ifeq ($(UNAME), OSX)
+ifeq ($(UNAME), Darwin)
 LDFLAGS= -framework glew -framework GLUT -framework OpenGL -framework Cocoa
 CFLAGS= -Wall -I. -DMAC
 endif
