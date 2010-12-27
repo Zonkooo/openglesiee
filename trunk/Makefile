@@ -19,17 +19,14 @@ EXE=projet
 $(EXE) :  terrain.o tga.o  tg.o 
 	$(CXX) $^  $(LDFLAGS) -o $(EXE)
 
+#dependences des .h
+terrain.o : terrain.h tga.h	
+tga.o : tga.h
 
-terrain.o : terrain.cpp terrain.h
-	$(CXX) -c  $(CFLAGS) $<
+#cible générique
+%.o : %.cpp
+	$(CXX) -c $(CFLAGS) $< -o $@
 	
-	
-tga.o : tga.cpp tga.h
-	$(CXX) -c  $(CFLAGS) $<
-	
-tg.o : tg.cpp
-	$(CXX) -c  $(CFLAGS) $<
-
 .PHONY : clean ultraclean
 
 clean::
