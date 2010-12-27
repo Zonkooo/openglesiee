@@ -1,9 +1,20 @@
-#Projet
+#Projet OpenGL
 CXX=g++
 CC=gcc
-EXE=projet
+
+UNAME := $(shell uname)
+
+ifeq ($(UNAME), Linux)
+LDFLAGS= -lglut -lGLU -lGLEW
+CFLAGS= -Wall -I. -DLINUX
+endif
+
+ifeq ($(UNAME), OSX)
 LDFLAGS= -framework glew -framework GLUT -framework OpenGL -framework Cocoa
-CFLAGS= -Wall -I.
+CFLAGS= -Wall -I. -DMAC
+endif
+
+EXE=projet
 
 $(EXE) :  terrain.o tga.o  tg.o 
 	$(CXX) $^  $(LDFLAGS) -o $(EXE)

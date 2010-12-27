@@ -50,7 +50,15 @@ any damages that you may incur for its usage.
 Antonio Ramires Fernandes ajbrf@yahoo.com
 -------------------------------------------------------------*/
 
-#include <OpenGL/gl.h>
+#ifdef LINUX
+	#include <GL/glut.h>
+	#include <GL/glu.h>
+#endif
+
+#ifdef MAC
+	#include <OpenGL/gl.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

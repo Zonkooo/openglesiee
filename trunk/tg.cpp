@@ -1,16 +1,14 @@
-
 #include <math.h>
 
-#define MAC
-
 #ifdef LINUX
-
+	#include <GL/glut.h>
+	#include <GL/glu.h>
 #endif
 
 #ifdef MAC
-#include <OpenGL/gl.h>
-#include <GLUT/glut.h>
-#include <OpenGL/glu.h>
+	#include <OpenGL/gl.h>
+	#include <GLUT/glut.h>
+	#include <OpenGL/glu.h>
 #endif
 
 #include <stdio.h>
@@ -54,8 +52,8 @@ float angle=0.0,deltaAngle = 0.0,ratio;
 float x=0.0f,y=1.75f,z=5.0f;
 float lx=0.0f,ly=0.0f,lz=-1.0f,deltaMove=0.0;
 int h,w;
-void** font=GLUT_BITMAP_8_BY_13;
-static GLint snowman_display_list;
+void* font = GLUT_BITMAP_8_BY_13;
+//static GLint snowman_display_list; UNUSED
 int bitmapHeight=13;
 int mode;
 float angle2,angle2Y,angleY;
@@ -180,7 +178,7 @@ void renderBitmapString(float x, float y, void *font,char *string)
 
 void renderScene(void) {
 
-	float modelview[16];
+//	float modelview[16]; UNUSED
 
 	if (deltaMove)
 		moveMeFlat(deltaMove);
@@ -232,17 +230,17 @@ void renderScene(void) {
 	setOrthographicProjection();
 	glPushMatrix();
 	glLoadIdentity();
-	renderBitmapString(30,15,(void *)font,"Terrain Tutorial @ 3D Tech"); 
-	renderBitmapString(30,30,(void *)font,s); 
-	renderBitmapString(30,45,(void *)font,"F1  - Game Mode  640x480 32 bits");
-	renderBitmapString(30,60,(void *)font,"F2  - Game Mode  800x600 32 bits");
-	renderBitmapString(30,75,(void *)font,"F3  - Game Mode 1024x768 32 bits");
-	renderBitmapString(30,90,(void *)font,"F4  - Window Mode");
-	renderBitmapString(30,105,(void *)font,"F10 - Simulate Lighting ON/OFF");
-	renderBitmapString(30,120,(void *)font,"F11 - OpenGL Lighting ON/OFF");
-	renderBitmapString(30,135,(void *)font,"F12 - Grab Screen");
-	renderBitmapString(30,150,(void *)font,"Esc - Quit");
-	renderBitmapString(30,165,(void *)font,currentMode);
+	renderBitmapString(30,15,(void *)font, (char*)"Terrain Tutorial @ 3D Tech"); 
+	renderBitmapString(30,30,(void *)font, s); 
+	renderBitmapString(30,45,(void *)font, (char*)"F1  - Game Mode  640x480 32 bits");
+	renderBitmapString(30,60,(void *)font, (char*)"F2  - Game Mode  800x600 32 bits");
+	renderBitmapString(30,75,(void *)font, (char*)"F3  - Game Mode 1024x768 32 bits");
+	renderBitmapString(30,90,(void *)font, (char*)"F4  - Window Mode");
+	renderBitmapString(30,105,(void *)font, (char*)"F10 - Simulate Lighting ON/OFF");
+	renderBitmapString(30,120,(void *)font, (char*)"F11 - OpenGL Lighting ON/OFF");
+	renderBitmapString(30,135,(void *)font, (char*)"F12 - Grab Screen");
+	renderBitmapString(30,150,(void *)font, (char*)"Esc - Quit");
+	renderBitmapString(30,165,(void *)font, currentMode);
 	glPopMatrix();
 	resetPerspectiveProjection();
 	glPopAttrib();
@@ -364,7 +362,7 @@ void pressKey(int key, int x, int y) {
 			terrainDL = terrainCreateDL(0,0,0,lighting);
 			break;
 		case GLUT_KEY_F12:
-			tgaGrabScreenSeries("3dtechscreen",0,0,w,h);
+			tgaGrabScreenSeries((char*)"3dtechscreen",0,0,w,h);
 			break;
 	}
 	if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) == 0)
@@ -455,7 +453,7 @@ int main(int argc, char **argv)
 	glutCreateWindow("SnowMen from 3D-Tech");
 
 	// init terrain structures
-	if (terrainLoadFromImage("3dtech.tga",1) != TERRAIN_OK)
+	if (terrainLoadFromImage((char*)"3dtech.tga",1) != TERRAIN_OK)
 		return(-1);
 	terrainScale(0,20);
 	// register all callbacks and
