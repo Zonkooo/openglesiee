@@ -16,11 +16,14 @@ endif
 
 EXE=projet
 
-$(EXE) :  terrain.o tga.o  tg.o 
-	$(CXX) $^  $(LDFLAGS) -o $(EXE)
+SRC= $(wildcard *.cpp)
+OBJ= $(SRC:.cpp=.o)
+
+$(EXE) : $(OBJ)
+	$(CXX) $^ $(LDFLAGS) -o $(EXE)
 
 #dependences des .h
-terrain.o : terrain.h tga.h	
+terrain.o : terrain.h tga.h
 tga.o : tga.h
 
 #cible générique
