@@ -1,5 +1,4 @@
 #include <cmath>
-#include <iostream>
 
 #ifdef LINUX
 	#include <GL/glut.h>
@@ -397,7 +396,7 @@ void pressKey(int key, int x, int y)
 			break;
 		
 		default :
-			std::cout << "useless key pressed" << std::endl;
+			printf("useless key pressed");
 			break;
 	}
 	if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) == 0)
