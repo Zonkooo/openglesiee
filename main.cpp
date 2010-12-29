@@ -1,4 +1,5 @@
-#include <math.h>
+#include <cmath>
+#include <iostream>
 
 #ifdef LINUX
 	#include <GL/glut.h>
@@ -74,7 +75,7 @@ char gameModeString[40] = "640x480";
 void init();
 
 void changeSize(int w1, int h1)
-	{
+{
 
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
@@ -89,7 +90,7 @@ void changeSize(int w1, int h1)
 	glLoadIdentity();
 	
 	// Set the viewport to be the entire window
-    glViewport(0, 0, w, h);
+		glViewport(0, 0, w, h);
 
 	// Set the clipping volume
 	gluPerspective(45,ratio,0.1,1000);
@@ -98,12 +99,13 @@ void changeSize(int w1, int h1)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
-		      x + lx,y + ly,z + lz,
-			  0.0f,1.0f,0.0f);
+					x + lx,y + ly,z + lz,
+				0.0f,1.0f,0.0f);
 }
 
 
-void initScene() {
+void initScene() 
+{
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -121,22 +123,23 @@ void initScene() {
 	glEnable(GL_LIGHT0);
 }
 
-void orientMe(float ang) {
+void orientMe(float ang) 
+{
 
 	lx = cos(angle2Y) * sin(ang);
 	lz = - cos(angle2Y) * cos(ang);
 }
 
 
-void moveMeFlat(float i) {
-
+void moveMeFlat(float i) 
+{
 	x = x + i*lx;
 	z = z + i*lz;
 	y = y + i*ly;
 }
 
-void setOrthographicProjection() {
-
+void setOrthographicProjection() 
+{
 	// switch to projection mode
 	glMatrixMode(GL_PROJECTION);
 	// save previous matrix which contains the 
@@ -154,7 +157,8 @@ void setOrthographicProjection() {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void resetPerspectiveProjection() {
+void resetPerspectiveProjection() 
+{
 	// set the current matrix to GL_PROJECTION
 	glMatrixMode(GL_PROJECTION);
 	// restore previous settings
@@ -164,48 +168,54 @@ void resetPerspectiveProjection() {
 }
 
 void renderBitmapString(float x, float y, void *font,char *string)
-{
-  
-  char *c;
-  // set position to start drawing fonts
-  glRasterPos2f(x, y);
-  // loop all the characters in the string
-  for (c=string; *c != '\0'; c++) {
-    glutBitmapCharacter(font, *c);
-  }
+{	
+	char *c;
+	// set position to start drawing fonts
+	glRasterPos2f(x, y);
+	// loop all the characters in the string
+	for (c=string; *c != '\0'; c++) 
+	{
+		glutBitmapCharacter(font, *c);
+	}
 }
 
 
-void renderScene(void) {
-
+void renderScene(void) 
+{
 //	float modelview[16]; UNUSED
-
 	if (deltaMove)
+	{
 		moveMeFlat(deltaMove);
-	if (deltaAngle) {
+	}
+	if (deltaAngle) 
+	{
 		angle += deltaAngle;
 		orientMe(angle);
 	}
 	glLoadIdentity();
 	gluLookAt(x, y, z, 
-		      x + 10*lx,y + 10*ly,z + 10*lz,
+			  x + 10*lx,y + 10*ly,z + 10*lz,
 			  0.0f,1.0f,0.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (lighting)
+	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
+	}
 
-// Draw ground
-
+	//Draw ground
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS,mShininess);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cWhite);
-	if (lighting) {
+	if (lighting) 
+	{
 		glColorMaterial(GL_FRONT, GL_DIFFUSE);
 		glEnable(GL_COLOR_MATERIAL);
 	}
 	else
+	{
 		glDisable(GL_COLOR_MATERIAL);
+	}
 
 	glColor3f(1,1,1);
 	glCallList(terrainDL);
@@ -216,14 +226,15 @@ void renderScene(void) {
 	glTranslatef(0, 20, -15);
 
 
-
 	frame++;
 	time=glutGet(GLUT_ELAPSED_TIME);
-	if (time - timebase > 1000) {
+	if (time - timebase > 1000) 
+	{
 		sprintf(s,"FPS:%4.2f",frame*1000.0/(time-timebase));
 		timebase = time;		
 		frame = 0;
 	}
+	
 	glPushAttrib(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
 	glColor3f(0.0f,1.0f,1.0f);
@@ -232,10 +243,10 @@ void renderScene(void) {
 	glLoadIdentity();
 	renderBitmapString(30,15,(void *)font, (char*)"Terrain Tutorial @ 3D Tech"); 
 	renderBitmapString(30,30,(void *)font, s); 
-	renderBitmapString(30,45,(void *)font, (char*)"F1  - Game Mode  640x480 32 bits");
-	renderBitmapString(30,60,(void *)font, (char*)"F2  - Game Mode  800x600 32 bits");
-	renderBitmapString(30,75,(void *)font, (char*)"F3  - Game Mode 1024x768 32 bits");
-	renderBitmapString(30,90,(void *)font, (char*)"F4  - Window Mode");
+	renderBitmapString(30,45,(void *)font, (char*)"F1	- Game Mode	640x480 32 bits");
+	renderBitmapString(30,60,(void *)font, (char*)"F2	- Game Mode	800x600 32 bits");
+	renderBitmapString(30,75,(void *)font, (char*)"F3	- Game Mode 1024x768 32 bits");
+	renderBitmapString(30,90,(void *)font, (char*)"F4	- Window Mode");
 	renderBitmapString(30,105,(void *)font, (char*)"F10 - Simulate Lighting ON/OFF");
 	renderBitmapString(30,120,(void *)font, (char*)"F11 - OpenGL Lighting ON/OFF");
 	renderBitmapString(30,135,(void *)font, (char*)"F12 - Grab Screen");
@@ -247,37 +258,51 @@ void renderScene(void) {
 	glutSwapBuffers();
 }
 
-void processNormalKeys(unsigned char key, int x, int y) {
-
-	if (key == 27) {
+void processNormalKeys(unsigned char key, int x, int y) 
+{
+	if (key == 27) 
+	{
 		terrainDestroy();
 		exit(0);
 	}
 }
 
-void pressKey(int key, int x, int y) {
-
-	switch (key) {
-		case GLUT_KEY_LEFT : deltaAngle = -0.005f;break;
-		case GLUT_KEY_RIGHT : deltaAngle = 0.005f;break;
+void pressKey(int key, int x, int y) 
+{
+	switch (key) 
+	{
+		case GLUT_KEY_LEFT : 
+			deltaAngle = -0.005f;
+			break;
+		case GLUT_KEY_RIGHT : 
+			deltaAngle = 0.005f;
+			break;
 		case GLUT_KEY_UP : 
 			if (navigationMode == FLY)
+			{
 				deltaMove = 1;
+			}
 			else
+			{
 				deltaMove = 0.1;
+			}
 			break;
 		case GLUT_KEY_DOWN : 			
 			if (navigationMode == FLY)
+			{
 				deltaMove = -1;
+			}
 			else
+			{
 				deltaMove = -0.1;
+			}
 			break;
-		case GLUT_KEY_F1:  
-			
+		case GLUT_KEY_F1:			
 			// define resolution, color depth
 			glutGameModeString("640x480:32");
 			// enter full screen
-			if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) {
+			if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
+			{
 				glutEnterGameMode();
 				sprintf(gameModeString,"640x480:32");
 				w = 640;
@@ -289,11 +314,12 @@ void pressKey(int key, int x, int y) {
 			else
 				glutGameModeString(gameModeString);
 			break;
-		case GLUT_KEY_F2:     
+		case GLUT_KEY_F2:		 
 			// define resolution, color depth
 			glutGameModeString("800x600:32");
 			// enter full screen
-			if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) {
+			if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
+			{
 				glutEnterGameMode();
 				sprintf(gameModeString,"800x600:32");
 				w = 800;
@@ -305,11 +331,12 @@ void pressKey(int key, int x, int y) {
 			else
 				glutGameModeString(gameModeString);
 			break;
-		case GLUT_KEY_F3:  
+		case GLUT_KEY_F3:	
 			// define resolution, color depth
 			glutGameModeString("1024x768:32");
 			// enter full screen
-			if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) {
+			if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE)) 
+			{
 				glutEnterGameMode();
 				w = 1024;
 				h = 768;
@@ -321,7 +348,7 @@ void pressKey(int key, int x, int y) {
 			else
 				glutGameModeString(gameModeString);
 			break;
-		case GLUT_KEY_F4:  
+		case GLUT_KEY_F4:	
 			// return to default window
 			w = 640;h = 360;
 			if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) != 0)
@@ -336,11 +363,13 @@ void pressKey(int key, int x, int y) {
 			glDeleteLists(terrainDL,1);
 			if (simulateLighting)
 				lighting = 0;
-			if (lighting) {
+			if (lighting) 
+			{
 				glEnable(GL_LIGHTING);
 				glEnable(GL_LIGHT0);
 			}
-			else {
+			else 
+			{
 				glDisable(GL_LIGHT0);
 				glDisable(GL_LIGHTING);
 			}
@@ -348,11 +377,13 @@ void pressKey(int key, int x, int y) {
 			break;
 		case GLUT_KEY_F11:
 			lighting = !lighting;
-			if (lighting) {
+			if (lighting) 
+			{
 				glEnable(GL_LIGHTING);
 				glEnable(GL_LIGHT0);
 			}
-			else {
+			else 
+			{
 				glDisable(GL_LIGHT0);
 				glDisable(GL_LIGHTING);
 			}
@@ -364,10 +395,15 @@ void pressKey(int key, int x, int y) {
 		case GLUT_KEY_F12:
 			tgaGrabScreenSeries((char*)"3dtechscreen",0,0,w,h);
 			break;
+		
+		default :
+			std::cout << "useless key pressed" << std::endl;
+			break;
 	}
 	if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) == 0)
 		sprintf(currentMode,"Current Mode: Window - lighting : %d simulate lighting %d",lighting,simulateLighting);
 	else
+	{
 		sprintf(currentMode,
 			"Current Mode: Game Mode %dx%d at %d hertz, %d bpp - lighting : %d simulate lighting %d",
 			glutGameModeGet(GLUT_GAME_MODE_WIDTH),
@@ -375,62 +411,67 @@ void pressKey(int key, int x, int y) {
 			glutGameModeGet(GLUT_GAME_MODE_REFRESH_RATE),
 			glutGameModeGet(GLUT_GAME_MODE_PIXEL_DEPTH),
 			lighting,simulateLighting);
+	}
 }
 
-void releaseKey(int key, int x, int y) {
-
-	switch (key) {
-		case GLUT_KEY_LEFT : if (deltaAngle < 0.0f) 
-								 deltaAngle = 0.0f;
-							 break;
-		case GLUT_KEY_RIGHT : if (deltaAngle > 0.0f) 
-								 deltaAngle = 0.0f;
-							 break;
-		case GLUT_KEY_UP :	 if (deltaMove > 0) 
-								 deltaMove = 0;
-							 break;
-		case GLUT_KEY_DOWN : if (deltaMove < 0) 
-								 deltaMove = 0;
-							 break;
+void releaseKey(int key, int x, int y) 
+{
+	switch (key) 
+	{
+		case GLUT_KEY_LEFT : 
+			if (deltaAngle < 0.0f) 
+				deltaAngle = 0.0f;
+			break;
+		case GLUT_KEY_RIGHT : 
+			if (deltaAngle > 0.0f) 
+				deltaAngle = 0.0f;
+			break;
+		case GLUT_KEY_UP :	 
+			if (deltaMove > 0) 
+				deltaMove = 0;
+			break;
+		case GLUT_KEY_DOWN : 
+			if (deltaMove < 0) 
+				deltaMove = 0;
+			break;
 	}
 }
 
 
-void activeMouseMotion(int x, int y) {
-
-		angle2 = angle + (x-deltaX)*0.001;
-		angle2Y = angleY + (y-deltaY) * 0.001;
-		if (angle2Y > 1.57)
-			angle2Y = 1.57;
-		else if (angle2Y < -1.57)
-			angle2Y = -1.57;
-		lx = cos(angle2Y)*sin(angle2);
-		lz = -cos(angle2Y)*cos(angle2);
-		ly = -sin(angle2Y);
+void activeMouseMotion(int x, int y) 
+{
+	angle2 = angle + (x-deltaX)*0.001;
+	angle2Y = angleY + (y-deltaY) * 0.001;
+	if (angle2Y > 1.57)
+		angle2Y = 1.57;
+	else if (angle2Y < -1.57)
+		angle2Y = -1.57;
+	lx = cos(angle2Y)*sin(angle2);
+	lz = -cos(angle2Y)*cos(angle2);
+	ly = -sin(angle2Y);
 }
 
 
-void mousePress(int button, int state, int x, int y) {
-
-	if (state == GLUT_DOWN) {
+void mousePress(int button, int state, int x, int y) 
+{
+	if (state == GLUT_DOWN) 
+	{
 //		angle2 = 0;
 		deltaX = x;
 		deltaY = y;
 //		angle2Y = 0;
 		navigationMode = FLY;
 	} 
-	else if (state == GLUT_UP) {
+	else if (state == GLUT_UP) 
+	{
 		angleY = angle2Y;
 		angle = angle2;
 		navigationMode = WALK;
 	}
 }
 
-
-
-
-
-void init() {
+void init() 
+{
 	glutIgnoreKeyRepeat(1);
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(pressKey);
@@ -464,3 +505,4 @@ int main(int argc, char **argv)
 
 	return(0);
 }
+
