@@ -51,7 +51,7 @@ int navigationMode = WALK;
 
 
 float angle=0.0,deltaAngle = 0.0,ratio;
-float x=0.0f,y=1.75f,z=5.0f;
+float x = 0.f, y = 50.f, z = 0.f;
 float lx=0.0f,ly=0.0f,lz=-1.0f,deltaMove=0.0;
 int h,w;
 void* font = GLUT_BITMAP_8_BY_13;
@@ -109,7 +109,6 @@ void drawCubeMap(float size)
 
 void changeSize(int w1, int h1)
 {
-
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
 	if(h1 == 0)
@@ -148,7 +147,6 @@ void initScene()
 	terrainAmbientColor(0.04, 0.04, 0.04);
 	terrainLightPosition(lPosition[0],lPosition[1],lPosition[2],lPosition[3]);
 	terrainDL = terrainCreateDL(0,0,0,lighting);
-	y = terrainGetHeight(0,0) + 1.75;
 	
 	glLightfv(GL_LIGHT0,GL_AMBIENT,lAmbient);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,lDiffuse);
@@ -304,19 +302,11 @@ void renderScene(void)
 	//nettoyage des buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+	//lights
 	if (lighting)
 	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
 	}
-
-	//draw sky
-	glPushMatrix();
-
-	glDisable(GL_LIGHTING);
-	drawCubeMap(400.0);
-	glPushMatrix();
-	
-	//Draw ground
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS,mShininess);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cWhite);
@@ -333,14 +323,16 @@ void renderScene(void)
 	}
 
 	glColor3f(1,1,1);
+	
+	//draw sky
+	glDisable(GL_LIGHTING);
+	drawCubeMap(400.0);
+	glEnable(GL_LIGHTING);
+	
+	//draw terrain
 	glCallList(terrainDL);
 
-
-	glColor3f(1,0,0);
-	glRotatef(90, 0,1,0);
-	glTranslatef(0, 20, -15);
-
-
+	//prepare FPS counter
 	frame++;
 	time=glutGet(GLUT_ELAPSED_TIME);
 	if (time - timebase > 1000) 
@@ -352,7 +344,7 @@ void renderScene(void)
 	
 	glPushAttrib(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
-	glColor3f(0.0f,1.0f,1.0f);
+	glColor3f(0.0f,1.0f,1.0f); //print in teal (teal mask applied on white characters)
 	setOrthographicProjection();
 	glPushMatrix();
 	glLoadIdentity();
@@ -370,6 +362,7 @@ void renderScene(void)
 	glPopMatrix();
 	resetPerspectiveProjection();
 	glPopAttrib();
+	glColor3f(1.0f,1.0f,1.0f); //retour en couleurs normales
 	glutSwapBuffers();
 }
 
@@ -609,7 +602,7 @@ int main(int argc, char **argv)
 	glutCreateWindow("SnowMen from 3D-Tech");
 
 	// init terrain structures
-	if (terrainLoadFromImage((char*)"3dtech.tga",1) != TERRAIN_OK)
+	if (terrainLoadFromImage((char*)"3dtech.tga", 1) != TERRAIN_OK)
 		return(-1);
 	terrainScale(0,20);
 	// register all callbacks and
