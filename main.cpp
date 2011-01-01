@@ -1,107 +1,43 @@
-#include <cmath>
+#include "shaders.hpp"
+#include "main.hpp"
 
-#ifdef LINUX
-	#include <GL/glut.h>
-	#include <GL/glu.h>
-#endif
-
-#ifdef MAC
-	#include <OpenGL/gl.h>
-	#include <GLUT/glut.h>
-	#include <OpenGL/glu.h>
-#endif
-
-#include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-
-#include "tga.h"
-#include "terrain.h"
-
-
-int bla = 0;
-
-GLuint texid = 0; //textures du ciel
-
-// stuff for lighting
-GLfloat lAmbient[] = {0.2,0.2,0.2,1.0};
-GLfloat lDiffuse[] = {1.0,1.0,1.0,1.0};
-GLfloat lSpecular[] = {1.0,1.0,1.0,1.0};
-
-GLfloat lPosition[] = {0.0, 100.0, 0.0, 0.0};
-
-// materials
-GLfloat mSpecular[] = {0.0,0.0,0.0,0.0};
-// the smaller the larger the specular area is
-GLfloat mShininess[] = {128.0};
-
-//colors
-GLfloat cBlack[] = {0.0,0.0,0.0,1.0};
-GLfloat cOrange[] = {1.0,0.5,0.5,1.0}; 
-GLfloat cWhite[] = {1.0,1.0,1.0,1.0}; 
-GLfloat cGrey[] = {0.1,0.1,0.1,1.0};
-GLfloat cLightGrey[] = {0.9,0.9,0.9,1.0};
-
-int lighting=1,simulateLighting = 0;
-
-/* this is not doing anything at the moment */
-#define FLY		1
-#define WALK	2
-int navigationMode = WALK;
-
-
-float angle=0.0,deltaAngle = 0.0,ratio;
-float x = 0.f, y = 50.f, z = 0.f;
-float lx=0.0f,ly=0.0f,lz=-1.0f,deltaMove=0.0;
-int h,w;
-void* font = GLUT_BITMAP_8_BY_13;
-//static GLint snowman_display_list; UNUSED
-int bitmapHeight=13;
-int mode;
-float angle2,angle2Y,angleY;
-static int deltaX=-1000,deltaY;
-
-int terrainDL,iterations = 0,totalIterations = 0;
-char s[100];
-
-int frame,time,timebase=0;
-char currentMode[100];
-
-// this string keeps the last good setting 
-// for the game mode
-char gameModeString[40] = "640x480";
-
-
+#include <string.h>
 
 void init();
+
+static void quit(void)
+{
+	exit(0);
+}
 
 void drawCubeMap(float size)
 {
 	static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
 	static GLfloat yPlane[] = { 0.0f, 1.0f, 0.0f, 0.0f };
 	static GLfloat zPlane[] = { 0.0f, 0.0f, 1.0f, 0.0f };
-
+	
 	glEnable (GL_TEXTURE_GEN_S);
 	glEnable (GL_TEXTURE_GEN_T);
 	glEnable (GL_TEXTURE_GEN_R);
-
+	
 	glEnable (GL_TEXTURE_CUBE_MAP);
 	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
-
+	
 	glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 	glTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-
+	
 	glTexGenfv (GL_S, GL_OBJECT_PLANE, xPlane);
 	glTexGenfv (GL_T, GL_OBJECT_PLANE, yPlane);
 	glTexGenfv (GL_R, GL_OBJECT_PLANE, zPlane);
-
+	
 	glDisable(GL_CULL_FACE);
 	glutSolidSphere (size, 30, 30);
 	glEnable(GL_CULL_FACE);
-
+	
 	glDisable (GL_TEXTURE_CUBE_MAP);
-
+	
 	glDisable (GL_TEXTURE_GEN_S);
 	glDisable (GL_TEXTURE_GEN_T);
 	glDisable (GL_TEXTURE_GEN_R);
@@ -109,6 +45,7 @@ void drawCubeMap(float size)
 
 void changeSize(int w1, int h1)
 {
+
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
 	if(h1 == 0)
@@ -139,19 +76,80 @@ void changeSize(int w1, int h1)
 void initScene() 
 {
 
+	glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHT0);
+	
 	glEnable(GL_DEPTH_TEST);
+	
 	glEnable(GL_CULL_FACE);
+	
+	glShadeModel(GL_SMOOTH);
+	
+	glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+	
 	glCullFace(GL_BACK);
 	terrainSimulateLighting(simulateLighting);
 	terrainDiffuseColor(1.0, 1.0, 1.0);
 	terrainAmbientColor(0.04, 0.04, 0.04);
 	terrainLightPosition(lPosition[0],lPosition[1],lPosition[2],lPosition[3]);
 	terrainDL = terrainCreateDL(0,0,0,lighting);
+	y = terrainGetHeight(0,0) + 1.75;
 	
+	/*
+	//Shaders
+	if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
+		quit();
+	
+	
+	GLhandleARB so[2];
+	
+	bzero(so,sizeof(GLhandleARB)*2);
+	
+	
+	std::string s1 = "shaders/color.vert";
+	loadShader(s1.c_str());
+	so[0] = loadShader(s1.c_str());
+	if (so[0]==0) {
+		std::cerr << "loading shader "+s1+" failed (exiting...)" << std::endl;
+		quit();
+	}
+	if (!compileShader(so[0])) {
+		std::cerr << "compiling shader "+s1+" failed (exiting...)" << std::endl;
+		quit();
+	}
+	
+	
+	std::string s2 = "shaders/color.frag";
+	so[1] = loadShader(s2.c_str());
+	if(so[0]==0){
+		std::cerr << "loading shader "+s2+" failed (exiting...)" << std::endl;
+		quit();
+	}
+	if(!compileShader(so[1])){
+		std::cerr << "compiling shader "+s2+" failed (exiting...)" << std::endl;
+		quit();
+	}
+		
+	programobject = linkShaders(so,2);
+	
+	glDeleteObjectARB(so[0]);
+	glDeleteObjectARB(so[1]);
+	*/
+    #ifdef CHECK_ERRORS
+	err = glGetError();
+	if(err!=GL_NO_ERROR){
+		std::cerr << "Erreur GL :" << std::endl;
+		std::cerr << gluErrorString(err) << std::endl;
+	}
+	#endif
+
+
 	glLightfv(GL_LIGHT0,GL_AMBIENT,lAmbient);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,lDiffuse);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	
+	
 	
 	//textures cubemap du ciel
 	glGenTextures (1, &texid);
@@ -162,10 +160,10 @@ void initScene()
 	}
 	
 	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
-
+	
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -283,8 +281,6 @@ void renderBitmapString(float x, float y, void *font,char *string)
 void renderScene(void) 
 {
 //	float modelview[16]; UNUSED
-
-	//camera
 	if (deltaMove)
 	{
 		moveMeFlat(deltaMove);
@@ -299,21 +295,18 @@ void renderScene(void)
 			  x + 10*lx,y + 10*ly,z + 10*lz,
 			  0.0f,1.0f,0.0f);
 
-	//nettoyage des buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	//lights
 	if (lighting)
 	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
 	}
+
+	//Draw ground
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS,mShininess);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cWhite);
 	if (lighting) 
 	{
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
 		glColorMaterial(GL_FRONT, GL_DIFFUSE);
 		glEnable(GL_COLOR_MATERIAL);
 	}
@@ -323,28 +316,26 @@ void renderScene(void)
 	}
 
 	glColor3f(1,1,1);
-	
-	//draw sky
-	glDisable(GL_LIGHTING);
-	drawCubeMap(400.0);
-	glEnable(GL_LIGHTING);
-	
-	//draw terrain
 	glCallList(terrainDL);
 
-	//prepare FPS counter
+
+	glColor3f(1,0,0);
+	glRotatef(90, 0,1,0);
+	glTranslatef(0, 20, -15);
+
+
 	frame++;
-	time=glutGet(GLUT_ELAPSED_TIME);
-	if (time - timebase > 1000) 
+	time_current=glutGet(GLUT_ELAPSED_TIME);
+	if (time_current - timebase > 1000) 
 	{
-		sprintf(s,"FPS:%4.2f",frame*1000.0/(time-timebase));
-		timebase = time;		
+		sprintf(s,"FPS:%4.2f",frame*1000.0/(time_current-timebase));
+		timebase = time_current;		
 		frame = 0;
 	}
 	
 	glPushAttrib(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
-	glColor3f(0.0f,1.0f,1.0f); //print in teal (teal mask applied on white characters)
+	glColor3f(0.0f,1.0f,1.0f);
 	setOrthographicProjection();
 	glPushMatrix();
 	glLoadIdentity();
@@ -359,10 +350,16 @@ void renderScene(void)
 	renderBitmapString(30,135,(void *)font, (char*)"F12 - Grab Screen");
 	renderBitmapString(30,150,(void *)font, (char*)"Esc - Quit");
 	renderBitmapString(30,165,(void *)font, currentMode);
+	#ifdef CHECK_ERRORS
+		err = glGetError();
+		if(err!=GL_NO_ERROR){
+			std::cerr << "Erreur GL :" << std::endl;
+			std::cerr << gluErrorString(err) << std::endl;
+		}
+	#endif
 	glPopMatrix();
 	resetPerspectiveProjection();
 	glPopAttrib();
-	glColor3f(1.0f,1.0f,1.0f); //retour en couleurs normales
 	glutSwapBuffers();
 }
 
@@ -602,7 +599,7 @@ int main(int argc, char **argv)
 	glutCreateWindow("SnowMen from 3D-Tech");
 
 	// init terrain structures
-	if (terrainLoadFromImage((char*)"3dtech.tga", 1) != TERRAIN_OK)
+	if (terrainLoadFromImage((char*)"3dtech.tga",1) != TERRAIN_OK)
 		return(-1);
 	terrainScale(0,20);
 	// register all callbacks and
