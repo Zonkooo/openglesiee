@@ -174,7 +174,7 @@ void initScene()
 	
 	int i = 0; //pour le debug
 	
-	tgaInfo* image = tgaLoad((char *)"left.tga"); i++;
+	tgaInfo* image = tgaLoad((char *)"cubemap/left.tga"); i++;
 	if(image->status != TGA_OK){
 		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
 		exit(0);
@@ -182,7 +182,7 @@ void initScene()
 	glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
 	tgaDestroy(image);
 	
-	image = tgaLoad((char *)"back.tga"); i++;
+	image = tgaLoad((char *)"cubemap/down.tga"); i++;
 	if(image->status != TGA_OK){
 		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
 		exit(0);
@@ -190,7 +190,7 @@ void initScene()
 	glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
 	tgaDestroy(image);
 	
-	image = tgaLoad((char *)"bottom.tga"); i++;
+	image = tgaLoad((char *)"cubemap/back.tga"); i++;
 	if(image->status != TGA_OK){
 		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
 		exit(0);
@@ -198,7 +198,7 @@ void initScene()
 	glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
 	tgaDestroy(image);
 	
-	image = tgaLoad((char *)"right.tga"); i++;
+	image = tgaLoad((char *)"cubemap/right.tga"); i++;
 	if(image->status != TGA_OK){
 		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
 		exit(0);
@@ -206,7 +206,7 @@ void initScene()
 	glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
 	tgaDestroy(image);
 	
-	image = tgaLoad((char *)"front.tga"); i++;
+	image = tgaLoad((char *)"cubemap/top.tga"); i++;
 	if(image->status != TGA_OK){
 		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
 		exit(0);
@@ -214,7 +214,7 @@ void initScene()
 	glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
 	tgaDestroy(image);
 	
-	image = tgaLoad((char *)"top.tga"); i++;
+	image = tgaLoad((char *)"cubemap/front.tga"); i++;
 	if(image->status != TGA_OK){
 		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
 		exit(0);
