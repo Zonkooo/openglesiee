@@ -26,6 +26,7 @@ $(EXE) : $(OBJ)
 main.o : terrain.h tga.h
 terrain.o : terrain.h tga.h
 tga.o : tga.h
+shader.o : shader.hpp
 
 #cible générique
 %.o : %.cpp
