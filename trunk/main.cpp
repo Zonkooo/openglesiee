@@ -21,6 +21,8 @@
 
 int bla = 0;
 
+GLuint texid = 0; //textures du ciel
+
 // stuff for lighting
 GLfloat lAmbient[] = {0.2,0.2,0.2,1.0};
 GLfloat lDiffuse[] = {1.0,1.0,1.0,1.0};
@@ -73,6 +75,38 @@ char gameModeString[40] = "640x480";
 
 void init();
 
+void drawCubeMap(float size)
+{
+	static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
+	static GLfloat yPlane[] = { 0.0f, 1.0f, 0.0f, 0.0f };
+	static GLfloat zPlane[] = { 0.0f, 0.0f, 1.0f, 0.0f };
+
+	glEnable (GL_TEXTURE_GEN_S);
+	glEnable (GL_TEXTURE_GEN_T);
+	glEnable (GL_TEXTURE_GEN_R);
+
+	glEnable (GL_TEXTURE_CUBE_MAP);
+	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
+
+	glTexGeni (GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+	glTexGeni (GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+	glTexGeni (GL_R, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+
+	glTexGenfv (GL_S, GL_OBJECT_PLANE, xPlane);
+	glTexGenfv (GL_T, GL_OBJECT_PLANE, yPlane);
+	glTexGenfv (GL_R, GL_OBJECT_PLANE, zPlane);
+
+	glDisable(GL_CULL_FACE);
+	glutSolidSphere (size, 30, 30);
+	glEnable(GL_CULL_FACE);
+
+	glDisable (GL_TEXTURE_CUBE_MAP);
+
+	glDisable (GL_TEXTURE_GEN_S);
+	glDisable (GL_TEXTURE_GEN_T);
+	glDisable (GL_TEXTURE_GEN_R);
+}
+
 void changeSize(int w1, int h1)
 {
 
@@ -120,6 +154,75 @@ void initScene()
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,lDiffuse);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	
+	//textures cubemap du ciel
+	glGenTextures (1, &texid);
+	if(texid==0)
+	{
+		printf("Erreur a l'allocation de la texture\n");
+		exit(0);
+	}
+	
+	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	
+	int i = 0; //pour le debug
+	
+	tgaInfo* image = tgaLoad((char *)"left.tga"); i++;
+	if(image->status != TGA_OK){
+		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
+		exit(0);
+	}
+	glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
+	tgaDestroy(image);
+	
+	image = tgaLoad((char *)"back.tga"); i++;
+	if(image->status != TGA_OK){
+		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
+		exit(0);
+	}
+	glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
+	tgaDestroy(image);
+	
+	image = tgaLoad((char *)"bottom.tga"); i++;
+	if(image->status != TGA_OK){
+		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
+		exit(0);
+	}
+	glTexImage2D (GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
+	tgaDestroy(image);
+	
+	image = tgaLoad((char *)"right.tga"); i++;
+	if(image->status != TGA_OK){
+		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
+		exit(0);
+	}
+	glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
+	tgaDestroy(image);
+	
+	image = tgaLoad((char *)"front.tga"); i++;
+	if(image->status != TGA_OK){
+		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
+		exit(0);
+	}
+	glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
+	tgaDestroy(image);
+	
+	image = tgaLoad((char *)"top.tga"); i++;
+	if(image->status != TGA_OK){
+		printf("Erreur au chargement de l'image %d, erreur %d\n", i, image->status);
+		exit(0);
+	}
+	glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
+	tgaDestroy(image);	
+	
+	glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
 }
 
 void orientMe(float ang) 
@@ -182,6 +285,8 @@ void renderBitmapString(float x, float y, void *font,char *string)
 void renderScene(void) 
 {
 //	float modelview[16]; UNUSED
+
+	//camera
 	if (deltaMove)
 	{
 		moveMeFlat(deltaMove);
@@ -196,18 +301,29 @@ void renderScene(void)
 			  x + 10*lx,y + 10*ly,z + 10*lz,
 			  0.0f,1.0f,0.0f);
 
+	//nettoyage des buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 	if (lighting)
 	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
 	}
 
+	//draw sky
+	glPushMatrix();
+
+	glDisable(GL_LIGHTING);
+	drawCubeMap(400.0);
+	glPushMatrix();
+	
 	//Draw ground
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS,mShininess);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cWhite);
 	if (lighting) 
 	{
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
 		glColorMaterial(GL_FRONT, GL_DIFFUSE);
 		glEnable(GL_COLOR_MATERIAL);
 	}

@@ -23,6 +23,7 @@ $(EXE) : $(OBJ)
 	$(CXX) $^ $(LDFLAGS) -o $(EXE)
 
 #dependences des .h
+main.o : terrain.h tga.h
 terrain.o : terrain.h tga.h
 tga.o : tga.h
 
