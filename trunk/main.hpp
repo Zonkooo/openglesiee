@@ -8,7 +8,6 @@
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
 #include <OpenGL/glu.h>
-
 #endif
 
 #define CHECK_ERRORS
