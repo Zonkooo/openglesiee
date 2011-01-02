@@ -1,8 +1,63 @@
-#include "shaders.hpp"
 #include "main.hpp"
+#include "shaders.hpp"
 
 #include <stdlib.h>
 #include <string.h>
+
+#include "tga.h"
+#include "terrain.h"
+
+
+int bla = 0;
+
+GLuint texid = 0; //textures du ciel
+
+// stuff for lighting
+GLfloat lAmbient[] = {0.2,0.2,0.2,1.0};
+GLfloat lDiffuse[] = {1.0,1.0,1.0,1.0};
+GLfloat lSpecular[] = {1.0,1.0,1.0,1.0};
+
+GLfloat lPosition[] = {0.0, 100.0, 0.0, 0.0};
+
+// materials
+GLfloat mSpecular[] = {0.0,0.0,0.0,0.0};
+// the smaller the larger the specular area is
+GLfloat mShininess[] = {128.0};
+
+//colors
+GLfloat cBlack[] = {0.0,0.0,0.0,1.0};
+GLfloat cOrange[] = {1.0,0.5,0.5,1.0}; 
+GLfloat cWhite[] = {1.0,1.0,1.0,1.0}; 
+GLfloat cGrey[] = {0.1,0.1,0.1,1.0};
+GLfloat cLightGrey[] = {0.9,0.9,0.9,1.0};
+
+int lighting=1,simulateLighting = 0;
+
+#define FLY		1
+#define WALK	2
+int navigationMode = WALK; //déplacement 10 fois plus rapide en mode fly (souris cliquée)
+
+
+float angle=0.0,deltaAngle = 0.0,ratio;
+float x = 0.f, y = 50.f, z = 0.f;
+float lx=0.0f,ly=0.0f,lz=-1.0f,deltaMove=0.0;
+int h,w;
+void* font = GLUT_BITMAP_8_BY_13;
+//static GLint snowman_display_list; UNUSED
+int bitmapHeight=13;
+int mode;
+float angle2,angle2Y,angleY;
+static int deltaX=-1000,deltaY;
+
+int terrainDL,iterations = 0,totalIterations = 0;
+char s[100];
+
+int frame,time,timebase=0;
+char currentMode[100];
+
+// this string keeps the last good setting 
+// for the game mode
+char gameModeString[40] = "640x480";
 
 void init();
 
@@ -45,7 +100,6 @@ void drawCubeMap(float size)
 
 void changeSize(int w1, int h1)
 {
-
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
 	if(h1 == 0)
@@ -75,7 +129,6 @@ void changeSize(int w1, int h1)
 
 void initScene() 
 {
-
 	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
 	
@@ -93,7 +146,6 @@ void initScene()
 	terrainAmbientColor(0.04, 0.04, 0.04);
 	terrainLightPosition(lPosition[0],lPosition[1],lPosition[2],lPosition[3]);
 	terrainDL = terrainCreateDL(0,0,0,lighting);
-	y = terrainGetHeight(0,0) + 1.75;
 	
 	/*
 	//Shaders
@@ -281,6 +333,8 @@ void renderBitmapString(float x, float y, void *font,char *string)
 void renderScene(void) 
 {
 //	float modelview[16]; UNUSED
+
+	//camera
 	if (deltaMove)
 	{
 		moveMeFlat(deltaMove);
@@ -296,12 +350,12 @@ void renderScene(void)
 			  0.0f,1.0f,0.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	//lights
 	if (lighting)
 	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
 	}
-
-	//Draw ground
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS,mShininess);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cWhite);
@@ -316,14 +370,16 @@ void renderScene(void)
 	}
 
 	glColor3f(1,1,1);
+	
+	//draw sky
+	glDisable(GL_LIGHTING);
+	drawCubeMap(400.0);
+	glEnable(GL_LIGHTING);
+
+	//Draw ground
 	glCallList(terrainDL);
 
-
-	glColor3f(1,0,0);
-	glRotatef(90, 0,1,0);
-	glTranslatef(0, 20, -15);
-
-
+	//prepare fpsq counter
 	frame++;
 	time_current=glutGet(GLUT_ELAPSED_TIME);
 	if (time_current - timebase > 1000) 
@@ -335,7 +391,7 @@ void renderScene(void)
 	
 	glPushAttrib(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
-	glColor3f(0.0f,1.0f,1.0f);
+	glColor3f(0.0f,1.0f,1.0f); //print in teal (teal mask applied on white characters)
 	setOrthographicProjection();
 	glPushMatrix();
 	glLoadIdentity();
@@ -360,6 +416,8 @@ void renderScene(void)
 	glPopMatrix();
 	resetPerspectiveProjection();
 	glPopAttrib();
+	glColor3f(1.0f,1.0f,1.0f); //retour en couleurs normales
+
 	glutSwapBuffers();
 }
 
