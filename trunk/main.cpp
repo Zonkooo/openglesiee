@@ -7,6 +7,13 @@
 #include "tga.h"
 #include "terrain.h"
 
+
+static void quit(void)
+{
+	exit(0);
+}
+
+
 void drawCubeMap(float size)
 {
 	static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
@@ -88,7 +95,7 @@ void initScene()
 	terrainLightPosition(lPosition[0],lPosition[1],lPosition[2],lPosition[3]);
 	terrainDL = terrainCreateDL(0,0,0,lighting);
 	
-	/*
+	
 	//Shaders
 	if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
 		quit();
@@ -127,7 +134,7 @@ void initScene()
 	
 	glDeleteObjectARB(so[0]);
 	glDeleteObjectARB(so[1]);
-	*/
+	
     #ifdef CHECK_ERRORS
 	err = glGetError();
 	if(err!=GL_NO_ERROR){
@@ -269,6 +276,7 @@ void renderBitmapString(float x, float y, void *font,char *string)
 		glutBitmapCharacter(font, *c);
 	}
 }
+
 
 
 void renderScene(void) 
