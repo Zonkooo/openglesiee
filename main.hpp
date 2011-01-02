@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef LINUX
 #include <GL/glut.h>
 #include <GL/glu.h>
@@ -58,7 +60,7 @@ int navigationMode = WALK;
 
 
 float angle=0.0,deltaAngle = 0.0,ratio;
-float x=0.0f,y=1.75f,z=5.0f;
+float x = 0.0f, y = 50.f, z = 0.0f;
 float lx=0.0f,ly=0.0f,lz=-1.0f,deltaMove=0.0;
 int h,w;
 void* font = GLUT_BITMAP_8_BY_13;	
@@ -77,28 +79,9 @@ char currentMode[100];
 // for the game mode
 char gameModeString[40] = "640x480";
 
-// Origine de la fenetre
-static const unsigned int windowx = 0;
-static const unsigned int windowy = 0;
-
-// Dimensions de la fenetre
-static unsigned int windowwidth  = 800;
-static unsigned int windowheight = 600;
-
 GLenum err;
-
-// Modele de la camera
-static float position[] = {0.0f,0.0f,3.0f};
-static float aim[] = {0.0f,0.0f,-1.0f};
-static float direction[] = {0.0f,0.0f,-1.0f};
-
-// Rotation de la camera
-static float yrotation = 0.0f;
-static float xrotation = 0.0f;
-
-// Données sur le curseur et la souris
-static int xmouseposition = 0;
-static int ymouseposition = 0;
-static bool buttonpressed = false;
-
 GLhandleARB programobject = 0;
+
+void init();
+
+
