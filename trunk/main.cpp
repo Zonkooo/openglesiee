@@ -613,6 +613,12 @@ int main(int argc, char **argv)
 	// create display lists
 	init();
 
+	printf("load d'un fichier obj\n");
+	ObjLoader obj = ObjLoader("tmb_1.obj");
+	printf("affichage d'un fichier ob\n");
+	obj.returnObj().draw();
+	printf("import fini");
+
 	glutMainLoop();
 
 	return(0);
