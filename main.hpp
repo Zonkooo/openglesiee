@@ -25,7 +25,7 @@
 
 #include "tga.h"
 #include "terrain.h"
-
+#include "objloader.h"
 
 
 int bla = 0;
