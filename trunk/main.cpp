@@ -97,7 +97,7 @@ void initScene()
 	
 	
 	//Shaders
-	if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
+	/*if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
 		quit();
 	
 	
@@ -133,7 +133,7 @@ void initScene()
 	programobject = linkShaders(so,2);
 	
 	glDeleteObjectARB(so[0]);
-	glDeleteObjectARB(so[1]);
+	glDeleteObjectARB(so[1]);*/
 	
     #ifdef CHECK_ERRORS
 	err = glGetError();

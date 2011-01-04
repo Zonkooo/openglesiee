@@ -25,7 +25,7 @@ class ObjLoader  {
 			ObjLoader(std::string file);
 			void loadObj(std::string file);
 			void freeObj(void);
-			Object3D returnObj(void);
+			Object3D& returnObj(void);
 
 		protected:
 			std::string *m_file;

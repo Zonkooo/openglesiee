@@ -30,8 +30,7 @@ class Object3D {
 		Object3D(const Object3D& o);
 		Object3D& operator=(const Object3D& o);
 		void draw();
-					
-		int m_numVertex, m_numNormal, m_numTexCoord, m_numTriangle;
+
 		std::vector<vec3> m_vertexArray;
 		std::vector<vec3> m_normalArray;
 		std::vector<vec3> m_texCoordArray;
