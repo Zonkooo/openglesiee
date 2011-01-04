@@ -31,9 +31,9 @@ void ObjLoader::freeObj(void){
 		delete m_obj;
 }
 
-Object3D ObjLoader::returnObj(void){
-	Object3D ret(*m_obj);
-	return ret;
+Object3D& ObjLoader::returnObj(void){
+	Object3D *ret = new Object3D(*m_obj);
+	return *ret;
 }
 
 void ObjLoader::readData(void){
@@ -44,11 +44,7 @@ void ObjLoader::readData(void){
 	if( !input.is_open() )
 		return;
 
-	//creation des index
-	int i_n, i_v, i_t, i_f;
-	i_n = i_v = i_t = i_f = 0;
-
-	//deuxieme passe pour stocker les donnees
+	//passe pour stocker les donnees
 	while( !input.eof() ){
 		getline(input, buffer);
 		std::istringstream line(buffer);
@@ -65,8 +61,6 @@ void ObjLoader::readData(void){
 			m_obj->m_normalArray.push_back(temp_n);
 			
 			//printf("lecture vn\n");
-
-			i_n++;
 		}				
 		else if(buffer.substr(0,2) == "vt"){
 			line >> temp >> f1 >> f2;
@@ -75,8 +69,6 @@ void ObjLoader::readData(void){
 			m_obj->m_texCoordArray.push_back(temp_t);
 
 			//printf("lecture vt\n");
-
-			i_t++;
 		}				
 		else if(buffer.substr(0,1) == "v"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -86,8 +78,6 @@ void ObjLoader::readData(void){
 			m_obj->m_vertexArray.push_back(temp_v);
 
 			//printf("lecture v\n");
-
-			i_v++;
 		}
 		else if(buffer.substr(0,1) == "f"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -96,7 +86,6 @@ void ObjLoader::readData(void){
 			int end = start;
 			std::string temp;
 			end = f1.find_first_of("/");
-			//we have a line with the format of "f %d/%d/%d %d/%d/%d %d/%d/%d"
 			if(end != std::string::npos){
 				temp = f1.substr(start, end - start);
 				temp_f.Vertex[0] = atoi(temp.c_str()) - 1;
@@ -114,7 +103,6 @@ void ObjLoader::readData(void){
 
 			start = 0;
 			end = f2.find_first_of("/");
-			//we have a line with the format of "f %d/%d/%d %d/%d/%d %d/%d/%d"
 			if(end != std::string::npos)  {
 				temp = f2.substr(start, end - start);
 				temp_f.TexCoord[0] = atoi(temp.c_str()) - 1;
@@ -132,7 +120,6 @@ void ObjLoader::readData(void){
 
 			start = 0;
 			end = f3.find_first_of("/");
-			//we have a line with the format of "f %d/%d/%d %d/%d/%d %d/%d/%d"
 			if(end != std::string::npos)  {
 				temp = f3.substr(start, end - start);
 				temp_f.Normal[0] = atoi(temp.c_str()) - 1;
@@ -151,8 +138,6 @@ void ObjLoader::readData(void){
 			m_obj->m_triangleArray.push_back(temp_f);
 
 			//printf("lecture f\n");
-
-			i_f++;
 		}
 	}
 }
