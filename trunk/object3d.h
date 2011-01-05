@@ -11,8 +11,17 @@ Classe de stockage des modèles 3D au format OBJ
 #include <vector>
 #include "vec3.h"
 
+#ifdef LINUX
 #include <GL/glut.h>
 #include <GL/glu.h>
+#endif
+
+#ifdef MAC
+#include <glew.h>
+#include <OpenGL/gl.h>
+#include <GLUT/glut.h>
+#include <OpenGL/glu.h>
+#endif
 
 struct Triangle{
 	int Vertex[3];
