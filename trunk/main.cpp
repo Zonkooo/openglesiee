@@ -8,12 +8,6 @@
 #include "terrain.h"
 
 
-static void quit(void)
-{
-	exit(0);
-}
-
-
 void drawCubeMap(float size)
 {
 	static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
