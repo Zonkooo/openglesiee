@@ -22,13 +22,13 @@ OBJ= $(SRC:.cpp=.o)
 $(EXE) : $(OBJ)
 	$(CXX) $^ $(LDFLAGS) -o $(EXE)
 
-#dependences des .h
+#dependances des .h
 main.o : terrain.h tga.h main.hpp shaders.hpp
 terrain.o : terrain.h tga.h
 tga.o : tga.h
 shader.o : shader.hpp
-object3d.o : object3d.h
-objloader.o : objloader.h
+object3d.o : object3d.h vec3.h
+objloader.o : objloader.h object3d.h
 
 #cible générique
 %.o : %.cpp

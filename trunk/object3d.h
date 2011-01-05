@@ -1,3 +1,4 @@
+#pragma once
 /*
 Classe Objet3D
 Author: Clement Robein
@@ -5,9 +6,6 @@ Author: Clement Robein
 Classe de stockage des modèles 3D au format OBJ
 
 */
-
-#ifndef OBJECT3D_H
-#define OBJECT3D_H
 
 #include <stdio.h>
 #include <vector>
@@ -37,4 +35,3 @@ class Object3D {
 		std::vector<Triangle> m_triangleArray;
 	};
 
-#endif

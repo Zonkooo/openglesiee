@@ -1,3 +1,4 @@
+#pragma once
 /*
 Classe Objet3D
 Author: Clement Robein
@@ -5,9 +6,6 @@ Author: Clement Robein
 Classe de chargement des modèles 3D au format OBJ dans une classe Object3D
 
 */
-
-#ifndef OBJLOADER_H
-#define OBJLOADER_H
 
 #include <stdlib.h>
 #include <string>
@@ -33,5 +31,4 @@ class ObjLoader  {
 			
 			void readData(void);
 	};
-
-#endif
+	
