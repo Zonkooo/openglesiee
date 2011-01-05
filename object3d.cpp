@@ -42,7 +42,7 @@ void Object3D::draw(){
     glShadeModel(GL_SMOOTH);
     glBindTexture(GL_TEXTURE_2D,0);
 
-	for(int i = 0 ; i < m_triangleArray.size() ; i++){
+	for(unsigned int i = 0 ; i < m_triangleArray.size() ; i++){
 		glBegin(GL_TRIANGLES);
 		//printf("debut gl triangles %d\n", i);
 				for(int j = 0 ; j < 3 ; j++){

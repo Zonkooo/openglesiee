@@ -86,7 +86,7 @@ void ObjLoader::readData(void){
 			int end = start;
 			std::string temp;
 			end = f1.find_first_of("/");
-			if(end != std::string::npos){
+			if(end != (int)std::string::npos){
 				temp = f1.substr(start, end - start);
 				temp_f.Vertex[0] = atoi(temp.c_str()) - 1;
 
@@ -103,7 +103,7 @@ void ObjLoader::readData(void){
 
 			start = 0;
 			end = f2.find_first_of("/");
-			if(end != std::string::npos)  {
+			if(end != (int)std::string::npos)  {
 				temp = f2.substr(start, end - start);
 				temp_f.TexCoord[0] = atoi(temp.c_str()) - 1;
 
@@ -120,7 +120,7 @@ void ObjLoader::readData(void){
 
 			start = 0;
 			end = f3.find_first_of("/");
-			if(end != std::string::npos)  {
+			if(end != (int)std::string::npos)  {
 				temp = f3.substr(start, end - start);
 				temp_f.Normal[0] = atoi(temp.c_str()) - 1;
 
