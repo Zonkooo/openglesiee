@@ -5,7 +5,7 @@ CC=gcc
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)
-LDFLAGS= -lglut -lGLU -lGLEW
+LDFLAGS= -lGL -lglut -lGLU -lGLEW
 CFLAGS= -Wall -I. -DLINUX
 endif
 
@@ -23,10 +23,10 @@ $(EXE) : $(OBJ)
 	$(CXX) $^ $(LDFLAGS) -o $(EXE)
 
 #dependances des .h
-main.o : terrain.h tga.h main.hpp shaders.hpp
+main.o : terrain.h tga.h main.h shaders.h
 terrain.o : terrain.h tga.h
 tga.o : tga.h
-shader.o : shader.hpp
+shader.o : shader.h
 object3d.o : object3d.h vec3.h
 objloader.o : objloader.h object3d.h
 

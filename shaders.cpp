@@ -4,7 +4,7 @@
 #include <fstream>
 #include <string>
 
-#include <shaders.hpp>
+#include <shaders.h>
 
 const int MAX_LOG_STRING = 1024;
 char logstring[MAX_LOG_STRING];
@@ -57,7 +57,7 @@ GLhandleARB loadShader(const char * filename)
 
   std::string s = buffer.str();
 
-  GLcharARB * source = new GLcharARB[4*(buffer.str().size()/4+1)];
+  GLcharARB * source = new GLcharARB[4 * (buffer.str().size()/4 + 1)];
   if(source == 0)
     return 0;
 
@@ -66,10 +66,10 @@ GLhandleARB loadShader(const char * filename)
    source[i] = s[i];
   }
   source[i] = '\0';
-
+  
   GLhandleARB so = 0; 
   if(vertexshader)
-    so = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB);
+    so = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); //pb here
   if(fragmentshader)
     so = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);    
 #ifdef USE_GEOMETRY_SHADER 
