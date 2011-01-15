@@ -1,5 +1,5 @@
-#include "shaders.hpp"
-#include "main.hpp"
+#include "shaders.h"
+#include "main.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -89,55 +89,6 @@ void initScene()
 	terrainLightPosition(lPosition[0],lPosition[1],lPosition[2],lPosition[3]);
 	terrainDL = terrainCreateDL(0,0,0,lighting);
 	
-	
-	//Shaders
-	/*if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
-		quit();
-	
-	
-	GLhandleARB so[2];
-	
-	bzero(so,sizeof(GLhandleARB)*2);
-	
-	
-	std::string s1 = "shaders/color.vert";
-	loadShader(s1.c_str());
-	so[0] = loadShader(s1.c_str());
-	if (so[0]==0) {
-		std::cerr << "loading shader "+s1+" failed (exiting...)" << std::endl;
-		quit();
-	}
-	if (!compileShader(so[0])) {
-		std::cerr << "compiling shader "+s1+" failed (exiting...)" << std::endl;
-		quit();
-	}
-	
-	
-	std::string s2 = "shaders/color.frag";
-	so[1] = loadShader(s2.c_str());
-	if(so[0]==0){
-		std::cerr << "loading shader "+s2+" failed (exiting...)" << std::endl;
-		quit();
-	}
-	if(!compileShader(so[1])){
-		std::cerr << "compiling shader "+s2+" failed (exiting...)" << std::endl;
-		quit();
-	}
-		
-	programobject = linkShaders(so,2);
-	
-	glDeleteObjectARB(so[0]);
-	glDeleteObjectARB(so[1]);*/
-	
-    #ifdef CHECK_ERRORS
-	err = glGetError();
-	if(err!=GL_NO_ERROR){
-		std::cerr << "Erreur GL :" << std::endl;
-		std::cerr << gluErrorString(err) << std::endl;
-	}
-	#endif
-
-
 	glLightfv(GL_LIGHT0,GL_AMBIENT,lAmbient);
 	glLightfv(GL_LIGHT0,GL_DIFFUSE,lDiffuse);
 	glEnable(GL_LIGHTING);
@@ -213,6 +164,56 @@ void initScene()
 	tgaDestroy(image);	
 	
 	glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+	
+	//----------------------------------------
+	//             Shaders
+	//----------------------------------------
+//	printf("debut chargmenent des shaders\n");
+//	if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
+//		exit(0);
+//	
+//	GLhandleARB so[2];	
+//	bzero(so,sizeof(GLhandleARB)*2);	
+//	
+//	printf("debut chargmenent vert\n");
+//	const char* s1 = "shaders/foo.vert";
+//	so[0] = loadShader(s1);
+//	if (so[0]==0) {
+//		std::cerr << "loading shader " << s1 << " failed (exiting...)" << std::endl;
+//		exit(0);
+//	}
+//	if (!compileShader(so[0])) {
+//		std::cerr << "compiling shader " << s1 << " failed (exiting...)" << std::endl;
+//		exit(0);
+//	}
+//	
+//	printf("debut chargmenent frag\n");
+//	std::string s2 = "shaders/foo.frag";
+//	so[1] = loadShader(s2.c_str());
+//	if(so[0]==0){
+//		std::cerr << "loading shader "+s2+" failed (exiting...)" << std::endl;
+//		exit(0);
+//	}
+//	if(!compileShader(so[1])){
+//		std::cerr << "compiling shader "+s2+" failed (exiting...)" << std::endl;
+//		exit(0);
+//	}
+//		
+//	printf("linkage...\n");
+//	programobject = linkShaders(so,2);
+//	
+//	glDeleteObjectARB(so[0]);
+//	glDeleteObjectARB(so[1]);
+	
+    #ifdef CHECK_ERRORS
+	err = glGetError();
+
+	if(err!=GL_NO_ERROR){
+		std::cerr << "Erreur GL :" << std::endl;
+		std::cerr << gluErrorString(err) << std::endl;
+
+	}
+	#endif
 }
 
 void orientMe(float ang) 
@@ -606,12 +607,6 @@ int main(int argc, char **argv)
 	// register all callbacks and
 	// create display lists
 	init();
-
-	printf("load d'un fichier obj\n");
-	ObjLoader obj = ObjLoader("tmb_1.obj");
-	printf("affichage d'un fichier ob\n");
-	obj.returnObj().draw();
-	printf("import fini");
 
 	glutMainLoop();
 
