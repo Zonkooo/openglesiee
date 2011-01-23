@@ -5,13 +5,13 @@ CC=gcc
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Linux)
-LDFLAGS= -lGL -lglut -lGLU -lGLEW
-CFLAGS= -Wall -I. -DLINUX
+LDFLAGS= -lglut -lGLU -lGL -lGLEW
+CFLAGS= -g -Wall -I. -DLINUX
 endif
 
 ifeq ($(UNAME), Darwin)
 LDFLAGS= -framework glew -framework GLUT -framework OpenGL -framework Cocoa
-CFLAGS= -Wall -I. -DMAC
+CFLAGS= -g -Wall -I. -DMAC
 endif
 
 EXE=projet
