@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef LINUX
+#include <GL/glew.h>
+#include <GL/gl.h>
 #include <GL/glut.h>
 #include <GL/glu.h>
 #endif

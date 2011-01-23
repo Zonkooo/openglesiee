@@ -168,42 +168,42 @@ void initScene()
 	//----------------------------------------
 	//             Shaders
 	//----------------------------------------
-//	printf("debut chargmenent des shaders\n");
-//	if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
-//		exit(0);
-//	
-//	GLhandleARB so[2];	
-//	bzero(so,sizeof(GLhandleARB)*2);	
-//	
-//	printf("debut chargmenent vert\n");
-//	const char* s1 = "shaders/foo.vert";
-//	so[0] = loadShader(s1);
-//	if (so[0]==0) {
-//		std::cerr << "loading shader " << s1 << " failed (exiting...)" << std::endl;
-//		exit(0);
-//	}
-//	if (!compileShader(so[0])) {
-//		std::cerr << "compiling shader " << s1 << " failed (exiting...)" << std::endl;
-//		exit(0);
-//	}
-//	
-//	printf("debut chargmenent frag\n");
-//	std::string s2 = "shaders/foo.frag";
-//	so[1] = loadShader(s2.c_str());
-//	if(so[0]==0){
-//		std::cerr << "loading shader "+s2+" failed (exiting...)" << std::endl;
-//		exit(0);
-//	}
-//	if(!compileShader(so[1])){
-//		std::cerr << "compiling shader "+s2+" failed (exiting...)" << std::endl;
-//		exit(0);
-//	}
-//		
-//	printf("linkage...\n");
-//	programobject = linkShaders(so,2);
-//	
-//	glDeleteObjectARB(so[0]);
-//	glDeleteObjectARB(so[1]);
+	printf("debut chargmenent des shaders\n");
+	if(!isExtensionSupported((char*)"GL_ARB_shading_language_100"))
+		exit(0);
+	
+	GLhandleARB so[2];	
+	bzero(so,sizeof(GLhandleARB)*2);	
+	
+	printf("debut chargmenent vert\n");
+	const char* s1 = "shaders/foo.vert";
+	so[0] = loadShader(s1);
+	if (so[0]==0) {
+		std::cerr << "loading shader " << s1 << " failed (exiting...)" << std::endl;
+		exit(0);
+	}
+	if (!compileShader(so[0])) {
+		std::cerr << "compiling shader " << s1 << " failed (exiting...)" << std::endl;
+		exit(0);
+	}
+	
+	printf("debut chargmenent frag\n");
+	std::string s2 = "shaders/foo.frag";
+	so[1] = loadShader(s2.c_str());
+	if(so[0]==0){
+		std::cerr << "loading shader "+s2+" failed (exiting...)" << std::endl;
+		exit(0);
+	}
+	if(!compileShader(so[1])){
+		std::cerr << "compiling shader "+s2+" failed (exiting...)" << std::endl;
+		exit(0);
+	}
+		
+	printf("linkage...\n");
+	programobject = linkShaders(so,2);
+	
+	glDeleteObjectARB(so[0]);
+	glDeleteObjectARB(so[1]);
 	
     #ifdef CHECK_ERRORS
 	err = glGetError();
@@ -295,7 +295,7 @@ void renderScene(void)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	//lights
+	//lights	
 	if (lighting)
 	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
@@ -317,13 +317,15 @@ void renderScene(void)
 	
 	//draw sky
 	glDisable(GL_LIGHTING);
+	glDisable(GL_DEPTH_TEST);
 	drawCubeMap(400.0);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 
 	//Draw ground
 	glCallList(terrainDL);
 
-	//prepare fpsq counter
+	//prepare fps counter
 	frame++;
 	time_current=glutGet(GLUT_ELAPSED_TIME);
 	if (time_current - timebase > 1000) 
@@ -579,6 +581,7 @@ void mousePress(int button, int state, int x, int y)
 
 void init() 
 {
+	glewInit();
 	glutIgnoreKeyRepeat(1);
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(pressKey);
