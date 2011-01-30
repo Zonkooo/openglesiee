@@ -95,6 +95,14 @@ void initScene()
 	glEnable(GL_LIGHT0);
 	
 	
+	//chargement des obj
+	printf("load d'un fichier obj\n");
+	ol.loadObj("elepha.obj");
+
+	obj = ol.returnObj();
+	vec3 *c = new vec3(0.8078, 0.2745, 0.4627);
+	obj.setColor(c);
+	printf("triangles : %d, vertex : %d\n", obj.m_triangleArray.size(), obj.m_vertexArray.size());
 	
 	//textures cubemap du ciel
 	glGenTextures (1, &texid);
@@ -321,6 +329,13 @@ void renderScene(void)
 	drawCubeMap(400.0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
+
+	//import de porc
+	//printf("affichage d'un fichier obj\n");
+    glMatrixMode(GL_MODELVIEW);
+	obj.draw();
+    glFlush();
+	//printf("draw obj fini\n");
 
 	//Draw ground
 	glCallList(terrainDL);
