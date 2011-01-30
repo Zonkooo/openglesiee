@@ -37,10 +37,13 @@ class Object3D {
 		Object3D(const Object3D& o);
 		Object3D& operator=(const Object3D& o);
 		void draw();
+		void setColor(vec3 *c);
 
 		std::vector<vec3> m_vertexArray;
 		std::vector<vec3> m_normalArray;
 		std::vector<vec3> m_texCoordArray;
 		std::vector<Triangle> m_triangleArray;
-	};
+
+		vec3 m_c;
+};
 

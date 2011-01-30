@@ -74,6 +74,10 @@ static int deltaX=-1000,deltaY;
 int terrainDL,iterations = 0,totalIterations = 0;
 char s[100];
 
+//import obj
+ObjLoader ol;
+Object3D obj;
+
 int frame,time_current,timebase=0;
 char currentMode[100];
 

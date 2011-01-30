@@ -38,20 +38,25 @@ void Object3D::draw(){
 	vec3 tmp;
 
 	glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);
-    glBindTexture(GL_TEXTURE_2D,0);
+	//printf("couleur : %f %f %f\n", m_c.x, m_c.y, m_c.z);
+	glColor3f(m_c.x, m_c.y, m_c.z);
 
 	for(unsigned int i = 0 ; i < m_triangleArray.size() ; i++){
 		glBegin(GL_TRIANGLES);
-		//printf("debut gl triangles %d\n", i);
 				for(int j = 0 ; j < 3 ; j++){
 					tmp = m_vertexArray.at(m_triangleArray[i].Vertex[j]);
 					glVertex3f(tmp.x, tmp.y, tmp.z);
-					printf("glVertex3f %f %f %f\n", tmp.x, tmp.y, tmp.z);
+					//printf("glVertex3f %f %f %f\n", tmp.x, tmp.y, tmp.z);
 				}
 		glEnd();
 	}
+
+	glPopMatrix();
 }
 
+void Object3D::setColor(vec3 *c)
+{
+	m_c = *c;
+}
 

@@ -86,54 +86,18 @@ void ObjLoader::readData(void){
 			int end = start;
 			std::string temp;
 			end = f1.find_first_of("/");
-			if(end != (int)std::string::npos){
-				temp = f1.substr(start, end - start);
-				temp_f.Vertex[0] = atoi(temp.c_str()) - 1;
-
-				start = end+1;
-				end = f1.find("/", start);
-				temp = f1.substr(start, end - start);
-				temp_f.Vertex[1] = atoi(temp.c_str()) - 1;
-
-				start = end+1;
-				end = f1.length();
-				temp = f1.substr(start, end - start);
-				temp_f.Vertex[2] = atoi(temp.c_str()) - 1;
-			}
+			if(end != (int)std::string::npos)
+				read_face(0, start, end, f1, temp_f);
 
 			start = 0;
 			end = f2.find_first_of("/");
-			if(end != (int)std::string::npos)  {
-				temp = f2.substr(start, end - start);
-				temp_f.TexCoord[0] = atoi(temp.c_str()) - 1;
-
-				start = end + 1;
-				end = f2.find("/", start+1);
-				temp = f2.substr(start, end - start);
-				temp_f.TexCoord[1] = atoi(temp.c_str()) - 1;
-
-				start = end + 1;
-				end = f2.length();
-				temp = f2.substr(start, end - start);
-				temp_f.TexCoord[2] = atoi(temp.c_str()) - 1;
-			}
+			if(end != (int)std::string::npos)
+				read_face(1, start, end, f2, temp_f);
 
 			start = 0;
 			end = f3.find_first_of("/");
-			if(end != (int)std::string::npos)  {
-				temp = f3.substr(start, end - start);
-				temp_f.Normal[0] = atoi(temp.c_str()) - 1;
-
-				start = end + 1;
-				end = f3.find("/", start+1);
-				temp = f3.substr(start, end - start);
-				temp_f.Normal[1] = atoi(temp.c_str()) - 1;
-
-				start = end + 1;
-				end = f3.length();
-				temp = f3.substr(start, end - start);
-				temp_f.Normal[2] = atoi(temp.c_str()) - 1;
-			}
+			if(end != (int)std::string::npos)
+				read_face(2, start, end, f3, temp_f);
 
 			m_obj->m_triangleArray.push_back(temp_f);
 
@@ -141,3 +105,22 @@ void ObjLoader::readData(void){
 		}
 	}
 }
+
+void ObjLoader::read_face(int i, int start, int end, std::string &f, Triangle &temp_f)
+{
+	std::string temp;
+
+	temp = f.substr(start, end - start);
+	temp_f.Vertex[i] = atoi(temp.c_str()) - 1;
+
+	start = end + 1;
+	end = f.find("/", start+1);
+	temp = f.substr(start, end - start);
+	temp_f.TexCoord[i] = atoi(temp.c_str()) - 1;
+
+	start = end + 1;
+	end = f.length();
+	temp = f.substr(start, end - start);
+	temp_f.Normal[i] = atoi(temp.c_str()) - 1;
+}
+

@@ -30,5 +30,6 @@ class ObjLoader  {
 			Object3D *m_obj;
 			
 			void readData(void);
+			void read_face(int i, int start, int end, std::string &f, Triangle &temp_f);
 	};
 	
