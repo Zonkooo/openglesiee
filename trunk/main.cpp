@@ -102,7 +102,7 @@ void initScene()
 	obj = ol.returnObj();
 	vec3 *c = new vec3(0.8078, 0.2745, 0.4627);
 	obj.setColor(c);
-	printf("triangles : %d, vertex : %d\n", obj.m_triangleArray.size(), obj.m_vertexArray.size());
+	printf("triangles : %d, vertex : %d\n", (int)obj.m_triangleArray.size(), (int)obj.m_vertexArray.size());
 	
 	//textures cubemap du ciel
 	glGenTextures (1, &texid);
@@ -280,10 +280,8 @@ void renderBitmapString(float x, float y, void *font,char *string)
 	}
 }
 
-
-
 void renderScene(void) 
-{
+{	
 //	float modelview[16]; UNUSED
 
 	//camera
@@ -333,7 +331,11 @@ void renderScene(void)
 	//import de porc
 	//printf("affichage d'un fichier obj\n");
     glMatrixMode(GL_MODELVIEW);
+    glScalef(0.1f, 0.1f, 0.1f);
+    glTranslatef(0.0f, 36.f, -1000.f);
 	obj.draw();
+    glTranslatef(0.0f, -36.f, 1000.f);
+    glScalef(10.f, 10.f, 10.f);
     glFlush();
 	//printf("draw obj fini\n");
 
@@ -380,6 +382,14 @@ void renderScene(void)
 	glColor3f(1.0f,1.0f,1.0f); //retour en couleurs normales
 
 	glutSwapBuffers();
+}
+
+#include <unistd.h>
+static void idleGL(void)
+{
+	//on attend un peu pour pas bouriner en fps
+	usleep(10); //apparement ça marche pas :/
+	glutPostRedisplay();
 }
 
 void processNormalKeys(unsigned char key, int x, int y) 
@@ -604,7 +614,7 @@ void init()
 	glutMotionFunc(activeMouseMotion);
 	glutMouseFunc(mousePress);
 	glutDisplayFunc(renderScene);
-	glutIdleFunc(renderScene);
+	glutIdleFunc(idleGL);
 	glutReshapeFunc(changeSize);
 	initScene();
 
@@ -616,7 +626,7 @@ int main(int argc, char **argv)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(640,360);
-	glutCreateWindow("SnowMen from 3D-Tech");
+	glutCreateWindow("Projet OpenGL - team ESIEE");
 
 	// init terrain structures
 	if (terrainLoadFromImage((char*)"3dtech.tga",1) != TERRAIN_OK)
