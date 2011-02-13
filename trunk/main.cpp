@@ -98,9 +98,9 @@ void initScene()
 	ol.loadObj("elepha.obj");
 
 	obj = ol.returnObj();
-	vec3 *c = new vec3(0.8078, 0.2745, 0.4627);
+	//vec3 *c = new vec3(0.8078, 0.2745, 0.4627);
 	//obj.setColor(c);
-	obj.loadTexture("elephant_tex.tga");
+	obj.loadTexture((char*)"elephant_tex.tga");
 	printf("triangles : %d, vertex : %d\n", (int)obj.m_triangleArray.size(), (int)obj.m_vertexArray.size());
 	
 	//textures cubemap du ciel
@@ -297,11 +297,15 @@ void renderScene(void)
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+	//cullation de ta face
+	glEnable(GL_CULL_FACE);
+	
 	//lights	
 	if (lighting)
 	{
 		glLightfv(GL_LIGHT0,GL_POSITION,lPosition);
 	}
+
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS,mShininess);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, cWhite);
@@ -404,15 +408,16 @@ void processNormalKeys(unsigned char key, int x, int y)
 		terrainDestroy();
 		exit(0);
 	}
+	else if(key =='c')
+	{ //prints the current camera position
+		printf("camera :\neye : (%f, %f, %f)\ncenter : (%f, %f, %f)\n\n", (float)x, (float)y, (float)z, x + 10*lx, y + 10*ly, z + 10*lz);
+	}
 }
 
 void pressKey(int key, int x, int y) 
 {
 	switch (key) 
 	{
-		case GLUT_KEY_END : //prints the current camera position
-			printf("camera :\neye : (%f, %f, %f)\ncenter : (%f, %f, %f)\n\n", x, y, z, x + 10*lx, y + 10*ly, z + 10*lz);
-			break;
 		case GLUT_KEY_LEFT : 
 			deltaAngle = -0.005f;
 			break;
@@ -608,9 +613,9 @@ void init()
 	glutSpecialUpFunc(releaseKey);
 	glutMotionFunc(activeMouseMotion);
 	glutMouseFunc(mousePress);
+	glutReshapeFunc(changeSize);
 	glutDisplayFunc(renderScene);
 	glutIdleFunc(idleGL);
-	glutReshapeFunc(changeSize);
 	initScene();
 
 }
