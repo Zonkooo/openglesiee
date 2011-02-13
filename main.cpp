@@ -67,7 +67,6 @@ void changeSize(int w1, int h1)
 				0.0f,1.0f,0.0f);
 }
 
-
 void initScene() 
 {
 	glDisable(GL_LIGHTING);
@@ -392,7 +391,8 @@ void renderScene(void)
 static void idleGL(void)
 {
 	//on attend un peu pour pas bouriner en fps
-	usleep(10); //apparement ça marche pas :/
+	usleep(10000); //en microsecondes
+	
 	glutPostRedisplay();
 }
 
@@ -409,6 +409,9 @@ void pressKey(int key, int x, int y)
 {
 	switch (key) 
 	{
+		case GLUT_KEY_END : //prints the current camera position
+			printf("camera :\neye : (%f, %f, %f)\ncenter : (%f, %f, %f)\n\n", x, y, z, x + 10*lx, y + 10*ly, z + 10*lz);
+			break;
 		case GLUT_KEY_LEFT : 
 			deltaAngle = -0.005f;
 			break;
