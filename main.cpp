@@ -99,7 +99,8 @@ void initScene()
 
 	obj = ol.returnObj();
 	vec3 *c = new vec3(0.8078, 0.2745, 0.4627);
-	obj.setColor(c);
+	//obj.setColor(c);
+	obj.loadTexture("elephant_tex.tga");
 	printf("triangles : %d, vertex : %d\n", (int)obj.m_triangleArray.size(), (int)obj.m_vertexArray.size());
 	
 	//textures cubemap du ciel

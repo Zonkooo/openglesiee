@@ -10,6 +10,7 @@ Classe de stockage des modèles 3D au format OBJ
 #include <stdio.h>
 #include <vector>
 #include "vec3.h"
+#include "tga.h"
 
 #ifdef LINUX
 #include <GL/glut.h>
@@ -38,6 +39,7 @@ class Object3D {
 		Object3D& operator=(const Object3D& o);
 		void draw();
 		void setColor(vec3 *c);
+		void loadTexture(char* fileName);
 
 		std::vector<vec3> m_vertexArray;
 		std::vector<vec3> m_normalArray;
@@ -45,5 +47,6 @@ class Object3D {
 		std::vector<Triangle> m_triangleArray;
 
 		vec3 m_c;
+		GLuint m_texture;
 };
 
