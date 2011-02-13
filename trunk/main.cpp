@@ -182,8 +182,7 @@ void initScene()
 	GLhandleARB so[2];	
 	bzero(so,sizeof(GLhandleARB)*2);	
 	
-	printf("debut chargmenent vert\n");
-	const char* s1 = "shaders/foo.vert";
+	const char* s1 = "shaders/water.vert";
 	so[0] = loadShader(s1);
 	if (so[0]==0) {
 		std::cerr << "loading shader " << s1 << " failed (exiting...)" << std::endl;
@@ -194,8 +193,7 @@ void initScene()
 		exit(0);
 	}
 	
-	printf("debut chargmenent frag\n");
-	std::string s2 = "shaders/foo.frag";
+	std::string s2 = "shaders/water.frag";
 	so[1] = loadShader(s2.c_str());
 	if(so[0]==0){
 		std::cerr << "loading shader "+s2+" failed (exiting...)" << std::endl;
@@ -205,8 +203,7 @@ void initScene()
 		std::cerr << "compiling shader "+s2+" failed (exiting...)" << std::endl;
 		exit(0);
 	}
-		
-	printf("linkage...\n");
+
 	programobject = linkShaders(so,2);
 	
 	glDeleteObjectARB(so[0]);
@@ -489,15 +486,6 @@ void pressKey(int key, int x, int y)
 			else
 				glutGameModeString(gameModeString);
 			break;
-		case GLUT_KEY_F4:	
-			// return to default window
-			w = 640;h = 360;
-			if (glutGameModeGet(GLUT_GAME_MODE_ACTIVE) != 0)
-				glutLeaveGameMode();
-			break;
-		case GLUT_KEY_F5:
-			bla = !bla;
-			break;
 		case GLUT_KEY_F10:
 			simulateLighting = !simulateLighting;
 			terrainSimulateLighting(simulateLighting);
@@ -533,10 +521,6 @@ void pressKey(int key, int x, int y)
 				simulateLighting = 0;
 			terrainDL = terrainCreateDL(0,0,0,lighting);
 			break;
-		case GLUT_KEY_F12:
-			tgaGrabScreenSeries((char*)"3dtechscreen",0,0,w,h);
-			break;
-		
 		default :
 			printf("useless key pressed");
 			break;
