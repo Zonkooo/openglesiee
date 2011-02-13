@@ -7,7 +7,6 @@
 #include "tga.h"
 #include "terrain.h"
 
-
 void drawCubeMap(float size)
 {
 	static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
@@ -341,6 +340,17 @@ void renderScene(void)
 
 	//Draw ground
 	glCallList(terrainDL);
+	
+	//draw water
+//	glColor3f(1.0f, 0.0f, 1.0f);
+	glUseProgramObjectARB(programobject);
+	glBegin(GL_POLYGON);
+		glVertex3f(-150.0f, 10.0f, -250.0f);
+		glVertex3f(-150.0f, 10.0f,  -50.0f);
+		glVertex3f( 150.0f, 10.0f,  -50.0f);
+		glVertex3f( 150.0f, 10.0f, -250.0f);
+	glEnd();
+	glUseProgramObjectARB(0);
 
 	//prepare fps counter
 	frame++;
@@ -358,17 +368,14 @@ void renderScene(void)
 	setOrthographicProjection();
 	glPushMatrix();
 	glLoadIdentity();
-	renderBitmapString(30,15,(void *)font, (char*)"Terrain Tutorial @ 3D Tech"); 
-	renderBitmapString(30,30,(void *)font, s); 
-	renderBitmapString(30,45,(void *)font, (char*)"F1	- Game Mode	640x480 32 bits");
-	renderBitmapString(30,60,(void *)font, (char*)"F2	- Game Mode	800x600 32 bits");
-	renderBitmapString(30,75,(void *)font, (char*)"F3	- Game Mode 1024x768 32 bits");
-	renderBitmapString(30,90,(void *)font, (char*)"F4	- Window Mode");
-	renderBitmapString(30,105,(void *)font, (char*)"F10 - Simulate Lighting ON/OFF");
-	renderBitmapString(30,120,(void *)font, (char*)"F11 - OpenGL Lighting ON/OFF");
-	renderBitmapString(30,135,(void *)font, (char*)"F12 - Grab Screen");
-	renderBitmapString(30,150,(void *)font, (char*)"Esc - Quit");
-	renderBitmapString(30,165,(void *)font, currentMode);
+	int hauteur = 15;
+	renderBitmapString(30,hauteur,(void *)font, s); hauteur += 15;
+	renderBitmapString(30,hauteur,(void *)font, (char*)"F1  - 640x480"); hauteur += 15;
+	renderBitmapString(30,hauteur,(void *)font, (char*)"F2  - 800x600"); hauteur += 15;
+	renderBitmapString(30,hauteur,(void *)font, (char*)"F3  - 1024x768"); hauteur += 15;
+	renderBitmapString(30,hauteur,(void *)font, (char*)"F10 - Simulate Lighting ON/OFF"); hauteur += 15;
+	renderBitmapString(30,hauteur,(void *)font, (char*)"F11 - OpenGL Lighting ON/OFF"); hauteur += 15;
+	renderBitmapString(30,hauteur,(void *)font, currentMode); hauteur += 15;
 	#ifdef CHECK_ERRORS
 		err = glGetError();
 		if(err!=GL_NO_ERROR){
