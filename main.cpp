@@ -39,6 +39,37 @@ void drawCubeMap(float size)
 	glDisable (GL_TEXTURE_GEN_R);
 }
 
+void mat_inverse (float *in, float *out)
+{
+		float det, oneOverDet;
+
+	det = in[0] * ((in[5] * in[10]) - (in[6] * in[9]))
+		+ in[1] * ((in[6] * in[8]) - (in[4] * in[10]))
+		+ in[2] * ((in[4] * in[9]) - (in[5] * in[8]));
+
+	oneOverDet = 1.0f / det;
+
+	out[0] = ((in[5] * in[10])- (in[6] * in[9])) * oneOverDet;
+	out[1] = ((in[2] * in[9]) - (in[1] * in[10]))* oneOverDet;
+	out[2] = ((in[1] * in[6]) - (in[2] * in[5])) * oneOverDet;
+	out[3] = 0.0f;
+
+	out[4] = ((in[6] * in[8]) - (in[4] * in[10]))* oneOverDet;
+	out[5] = ((in[0] * in[10])- (in[2] * in[8])) * oneOverDet;
+	out[6] = ((in[2] * in[4]) - (in[0] * in[6])) * oneOverDet;
+	out[7] = 0.0f;
+
+	out[8] = ((in[4] * in[9]) - (in[5] * in[8])) * oneOverDet;
+	out[9] = ((in[1] * in[8]) - (in[0] * in[9])) * oneOverDet;
+	out[10]= ((in[0] * in[5]) - (in[1] * in[4])) * oneOverDet;
+	out[11]= 0.0f;
+
+	out[12] = 0.0f;
+	out[13] = 0.0f;
+	out[14] = 0.0f;
+	out[15] = 1.0f;
+}
+
 void changeSize(int w1, int h1)
 {
 	// Prevent a divide by zero, when window is too short
@@ -278,8 +309,6 @@ void renderBitmapString(float x, float y, void *font,char *string)
 
 void renderScene(void) 
 {	
-//	float modelview[16]; UNUSED
-
 	//camera
 	if (deltaMove)
 	{
@@ -342,16 +371,30 @@ void renderScene(void)
 	//Draw ground
 	glCallList(terrainDL);
 	
+	//build de la matrice modelview
+	float mat[16];
+	float modelview[16];
+	glGetFloatv (GL_MODELVIEW_MATRIX, mat);
+	mat_inverse (mat, modelview); //matrice de passage de camera à scene
+	
 	//draw water
 //	glColor3f(1.0f, 0.0f, 1.0f);
-	glUseProgramObjectARB(programobject);
+	glUseProgramObjectARB(programobject); //shader mode
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
+	glUniform1i(glGetUniformLocation(programobject, "sky"), 0); 
+	
+	glUniformMatrix4fv(glGetUniformLocation(programobject, "cam_to_scene"), 1, false, modelview);
+		
 	glBegin(GL_POLYGON);
 		glVertex3f(-150.0f, 10.0f, -250.0f);
 		glVertex3f(-150.0f, 10.0f,  -50.0f);
 		glVertex3f( 150.0f, 10.0f,  -50.0f);
 		glVertex3f( 150.0f, 10.0f, -250.0f);
 	glEnd();
-	glUseProgramObjectARB(0);
+	
+	glUseProgramObjectARB(0); //fin des shaders
 
 	//prepare fps counter
 	frame++;

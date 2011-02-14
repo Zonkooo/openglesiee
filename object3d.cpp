@@ -78,7 +78,6 @@ void Object3D::loadTexture(char* fileName)
 		printf("Erreur au chargement de la texture : erreur %d\n", tex->status);
 		exit(0);
 	}
-
     glGenTextures(1, &m_texture);
     glBindTexture(GL_TEXTURE_2D, m_texture);
 
