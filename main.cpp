@@ -325,10 +325,7 @@ void renderScene(void)
 			  0.0f,1.0f,0.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	//cullation de ta face
-	glEnable(GL_CULL_FACE);
-	
+		
 	//lights	
 	if (lighting)
 	{
@@ -362,7 +359,9 @@ void renderScene(void)
     glMatrixMode(GL_MODELVIEW);
     glScalef(0.1f, 0.1f, 0.1f);
     glTranslatef(0.0f, 36.f, -1000.f);
+	glDisable(GL_CULL_FACE);
 	obj.draw();
+	glEnable(GL_CULL_FACE);
     glTranslatef(0.0f, -36.f, 1000.f);
     glScalef(10.f, 10.f, 10.f);
     glFlush();
@@ -387,6 +386,7 @@ void renderScene(void)
 	
 	glUniformMatrix4fv(glGetUniformLocation(programobject, "cam_to_scene"), 1, false, modelview);
 		
+	glLoadIdentity();
 	glBegin(GL_POLYGON);
 		glVertex3f(-150.0f, 10.0f, -250.0f);
 		glVertex3f(-150.0f, 10.0f,  -50.0f);
