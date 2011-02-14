@@ -358,11 +358,13 @@ void renderScene(void)
 	//printf("affichage d'un fichier obj\n");
     glMatrixMode(GL_MODELVIEW);
     glScalef(0.1f, 0.1f, 0.1f);
-    glTranslatef(0.0f, 36.f, -1000.f);
-	glDisable(GL_CULL_FACE);
-	obj.draw();
-	glEnable(GL_CULL_FACE);
-    glTranslatef(0.0f, -36.f, 1000.f);
+		glTranslatef(0.0f, 36.f, -1000.f);
+			glDisable(GL_CULL_FACE);
+				glDisable(GL_LIGHTING);
+					obj.draw();
+				glEnable(GL_LIGHTING);
+			glEnable(GL_CULL_FACE);
+		glTranslatef(0.0f, -36.f, 1000.f);
     glScalef(10.f, 10.f, 10.f);
     glFlush();
 	//printf("draw obj fini\n");
