@@ -7,7 +7,7 @@ uniform mat4 cam_to_scene;
 
 mat3 GetLinearPart( mat4 m )
 {
-	mat3 result = 0;
+	mat3 result;
 	
 	result[0][0] = m[0][0]; 
 	result[0][1] = m[0][1]; 
