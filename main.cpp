@@ -85,7 +85,7 @@ void changeSize(int w1, int h1)
 	glLoadIdentity();
 	
 	// Set the viewport to be the entire window
-		glViewport(0, 0, w, h);
+	glViewport(0, 0, w, h);
 
 	// Set the clipping volume
 	gluPerspective(45,ratio,0.1,1000);
@@ -201,7 +201,7 @@ void initScene()
 	glTexImage2D (GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, GL_RGBA, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->imageData);
 	tgaDestroy(image);	
 	
-	glBindTexture (GL_TEXTURE_CUBE_MAP, 0);
+	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
 	
 	//----------------------------------------
 	//             Shaders
@@ -386,7 +386,6 @@ void renderScene(void)
 	
 	glUniformMatrix4fv(glGetUniformLocation(programobject, "cam_to_scene"), 1, false, modelview);
 		
-	glLoadIdentity();
 	glBegin(GL_POLYGON);
 		glVertex3f(-150.0f, 10.0f, -250.0f);
 		glVertex3f(-150.0f, 10.0f,  -50.0f);
