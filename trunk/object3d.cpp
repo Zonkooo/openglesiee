@@ -47,12 +47,6 @@ void Object3D::draw(){
 
 	for(unsigned int i = 0 ; i < m_triangleArray.size() ; i++){
 		glBegin(GL_TRIANGLES);
-//		for(int j = 2 ; j >= 0 ; j--){
-//			tmp = m_vertexArray.at(m_triangleArray[i].TexCoord[j]);
-//			glTexCoord2f(tmp.x, tmp.y);
-//			tmp = m_vertexArray.at(m_triangleArray[i].Vertex[j]);
-//			glVertex3f(tmp.x, tmp.y, tmp.z);
-//		}
 		for(int j = 0 ; j < 3 ; j++){
 			tmp = m_vertexArray.at(m_triangleArray[i].TexCoord[j]);
 			glTexCoord2f(tmp.x, tmp.y);
