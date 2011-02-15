@@ -51,7 +51,7 @@ void Object3D::draw(){
 			tmp = m_vertexArray.at(m_triangleArray[i].TexCoord[j]);
 			glTexCoord2f(tmp.x, tmp.y);
 			tmp = m_vertexArray.at(m_triangleArray[i].Vertex[j]);
-			glVertex3f(tmp.x, tmp.y, tmp.z);
+			glVertex3f(tmp.x+m_pos.x, tmp.y+m_pos.y, tmp.z+m_pos.z);
 		}
 		glEnd();
 	}
@@ -62,6 +62,11 @@ void Object3D::draw(){
 void Object3D::setColor(vec3 *c)
 {
 	m_c = *c;
+}
+
+void Object3D::setPos(vec3 *p)
+{
+	m_pos = *p;
 }
 
 void Object3D::loadTexture(char* fileName)
