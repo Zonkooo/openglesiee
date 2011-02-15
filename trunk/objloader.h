@@ -7,7 +7,9 @@ Classe de chargement des modèles 3D au format OBJ dans une classe Object3D
 
 */
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -31,6 +33,7 @@ class ObjLoader  {
 			Object3D *m_obj;
 			
 			void readData(void);
+			void readMtl(std::string mat, int cpt);
 			void read_face(int i, int start, int end, std::string &f, Triangle &temp_f);
 	};
 	
