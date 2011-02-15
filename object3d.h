@@ -51,7 +51,6 @@ class Object3D {
 		void draw();
 		void setColor(vec3 *c);
 		void setPos(vec3 *p);
-		void loadTexture(char* fileName);
 
 		std::vector<vec3> m_vertexArray;
 		std::vector<vec3> m_normalArray;
@@ -61,6 +60,5 @@ class Object3D {
 
 		vec3 m_c;
 		vec3 m_pos;
-		GLuint m_texture;
 };
 
