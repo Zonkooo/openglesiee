@@ -9,6 +9,7 @@ Classe de stockage des modèles 3D au format OBJ
 
 #include <stdio.h>
 #include <vector>
+#include <string>
 #include "vec3.h"
 #include "tga.h"
 
@@ -30,6 +31,16 @@ struct Triangle{
 	int TexCoord[3];
 };
 
+struct Material{
+	std::string name;
+	std::string texName;
+    int firstVertice;
+    bool tex;
+    GLuint m_texture;
+    vec3 diffu, amb, spec;
+    double Ns,Ni,d,illum;
+};
+
 class Object3D {
 	public:
 		Object3D();
@@ -46,6 +57,7 @@ class Object3D {
 		std::vector<vec3> m_normalArray;
 		std::vector<vec3> m_texCoordArray;
 		std::vector<Triangle> m_triangleArray;
+		std::vector<Material> m_materialArray;
 
 		vec3 m_c;
 		vec3 m_pos;

@@ -6,6 +6,7 @@ Object3D::Object3D(){
 	m_normalArray.clear();
 	m_texCoordArray.clear();
 	m_triangleArray.clear();
+	m_materialArray.clear();
 }
 
 Object3D::~Object3D(){
@@ -14,6 +15,7 @@ Object3D::~Object3D(){
 	m_texCoordArray.clear();
 	m_vertexArray.clear();
 	m_triangleArray.clear();
+	m_materialArray.clear();
 }
 
 Object3D::Object3D(const Object3D &o){
@@ -22,6 +24,7 @@ Object3D::Object3D(const Object3D &o){
 	m_normalArray = std::vector<vec3>(o.m_normalArray);
 	m_texCoordArray = std::vector<vec3>(o.m_texCoordArray);
 	m_triangleArray = std::vector<Triangle>(o.m_triangleArray);
+	m_materialArray = std::vector<Material>(o.m_materialArray);
 }	
 
 Object3D& Object3D::operator=(const Object3D &o){
@@ -30,6 +33,7 @@ Object3D& Object3D::operator=(const Object3D &o){
 	m_normalArray = std::vector<vec3>(o.m_normalArray);
 	m_texCoordArray = std::vector<vec3>(o.m_texCoordArray);
 	m_triangleArray = std::vector<Triangle>(o.m_triangleArray);
+	m_materialArray = std::vector<Material>(o.m_materialArray);
 
 	return *this;
 }

@@ -126,14 +126,15 @@ void initScene()
 	
 	//chargement des obj
 	printf("load d'un fichier obj\n");
-	ol.loadObj("elepha.obj");
+	ol.loadObj("obj/ele1.obj");
+	printf("fin load d'un fichier obj\n");
 
 	obj = ol.returnObj();
 	//vec3 *c = new vec3(0.8078, 0.2745, 0.4627);
 	//obj.setColor(c);
 	vec3 *p = new vec3(200.0,0.0,0.0);
 	obj.setPos(p);
-	obj.loadTexture((char*)"elephant_tex.tga");
+//	obj.loadTexture((char*)"elephant_tex.tga");
 	printf("triangles : %d, vertex : %d\n", (int)obj.m_triangleArray.size(), (int)obj.m_vertexArray.size());
 	
 	//textures cubemap du ciel
