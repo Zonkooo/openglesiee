@@ -27,6 +27,7 @@ class ObjLoader  {
 
 		protected:
 			std::string *m_file;
+			std::string *m_mtlFile;
 			Object3D *m_obj;
 			
 			void readData(void);

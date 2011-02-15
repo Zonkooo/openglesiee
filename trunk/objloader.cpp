@@ -11,6 +11,7 @@ ObjLoader::~ObjLoader(){
 
 ObjLoader::ObjLoader(std::string file){
 	m_file = new std::string(file);
+	m_mtlFile = new std::string();
 	m_obj = new Object3D();
 	printf("debut de lecture des donnes du fichier\n");
 	readData();
@@ -20,6 +21,7 @@ ObjLoader::ObjLoader(std::string file){
 void ObjLoader::loadObj(std::string file){
 	freeObj();
 	m_file = new std::string(file);
+	m_mtlFile = new std::string();
 	m_obj = new Object3D();
 	readData();
 }
@@ -39,6 +41,7 @@ Object3D& ObjLoader::returnObj(void){
 void ObjLoader::readData(void){
 	std::ifstream input(m_file->c_str());
 	std::string buffer;
+	int cpt = 0;
 
 	//verification de l'ouverture du fichier
 	if( !input.is_open() )
@@ -52,6 +55,7 @@ void ObjLoader::readData(void){
 		std::string f1, f2, f3;
 		vec3 temp_n, temp_v, temp_t;
 		Triangle temp_f;
+		cpt++;
 
 		if(buffer.substr(0,2) == "vn"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -59,16 +63,12 @@ void ObjLoader::readData(void){
 			temp_n.y = atof(f2.c_str());
 			temp_n.z = atof(f3.c_str());
 			m_obj->m_normalArray.push_back(temp_n);
-			
-			//printf("lecture vn\n");
 		}				
 		else if(buffer.substr(0,2) == "vt"){
 			line >> temp >> f1 >> f2;
 			temp_t.x = atof(f1.c_str());
 			temp_t.y = atof(f2.c_str());
 			m_obj->m_texCoordArray.push_back(temp_t);
-
-			//printf("lecture vt\n");
 		}				
 		else if(buffer.substr(0,1) == "v"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -76,8 +76,13 @@ void ObjLoader::readData(void){
 			temp_v.y = atof(f2.c_str());
 			temp_v.z = atof(f3.c_str());
 			m_obj->m_vertexArray.push_back(temp_v);
-
-			//printf("lecture v\n");
+		}
+		else if(buffer.substr(0,6) == "usemtl"){
+			line >> temp >> f1;
+			Material temp_m;
+			temp_m.name = f1;
+			m_obj->m_materialArray.push_back(temp_m);
+            m_obj->m_materialArray[m_obj->m_materialArray.size()-1].firstVertice = cpt;
 		}
 		else if(buffer.substr(0,1) == "f"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -100,8 +105,10 @@ void ObjLoader::readData(void){
 				read_face(2, start, end, f3, temp_f);
 
 			m_obj->m_triangleArray.push_back(temp_f);
-
-			//printf("lecture f\n");
+		}
+		else if(buffer.substr(0,6) == "mtllib"){
+			line >> temp >> f1;
+            *m_mtlFile = f1;
 		}
 	}
 }
