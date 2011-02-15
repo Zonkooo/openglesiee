@@ -13,9 +13,7 @@ ObjLoader::ObjLoader(std::string file){
 	m_file = new std::string(file);
 	m_mtlFile = new std::string();
 	m_obj = new Object3D();
-	printf("debut de lecture des donnes du fichier\n");
 	readData();
-	printf("fin de lecture\n");
 }
 
 void ObjLoader::loadObj(std::string file){
@@ -79,6 +77,7 @@ void ObjLoader::readData(void){
 		}
 		else if(buffer.substr(0,6) == "usemtl"){
 			line >> temp >> f1;
+			readMtl(f1, cpt);
 			Material temp_m;
 			temp_m.name = f1;
 			m_obj->m_materialArray.push_back(temp_m);
@@ -108,7 +107,73 @@ void ObjLoader::readData(void){
 		}
 		else if(buffer.substr(0,6) == "mtllib"){
 			line >> temp >> f1;
-            *m_mtlFile = f1;
+            *m_mtlFile = "obj/" + f1;
+		}
+	}
+}
+
+void ObjLoader::readMtl(std::string mat, int cpt)
+{
+	std::ifstream input(m_mtlFile->c_str());
+	std::string buffer;
+
+	//verification de l'ouverture du fichier
+	if( !input.is_open() )
+		return;
+
+	//passe pour stocker les donnees
+	while( !input.eof() ){
+		getline(input, buffer);
+		std::istringstream line(buffer);
+		std::string temp, f1, f2, f3;
+		vec3 temp_v;
+		Material newMat;
+
+		if(buffer.substr(0,6) == "newmtl"){
+			line >> temp >> f1;
+			if((strcmp(f1.c_str(), mat.c_str()) == 0))	
+			{
+				getline(input, buffer);
+				std::istringstream line2(buffer);
+				line2 >> temp >> f1;
+				newMat.Ns = atof(f1.c_str());
+
+				getline(input, buffer);
+				line2 >> temp >> f1;
+				newMat.Ni = atof(f1.c_str());
+
+				getline(input, buffer);
+				line2 >> temp >> f1;
+				newMat.d = atof(f1.c_str());
+
+				getline(input, buffer);
+				getline(input, buffer);
+
+				getline(input, buffer);
+				line2 >> temp >> f1;
+				newMat.illum = atof(f1.c_str());
+
+				getline(input, buffer);
+				line2 >> temp >> f1 >> f2 >> f3;
+				temp_v.x = atof(f1.c_str());
+				temp_v.y = atof(f2.c_str());
+				temp_v.z = atof(f3.c_str());
+				newMat.diffu = temp_v;
+
+				getline(input, buffer);
+				line2 >> temp >> f1 >> f2 >> f3;
+				temp_v.x = atof(f1.c_str());
+				temp_v.y = atof(f2.c_str());
+				temp_v.z = atof(f3.c_str());
+				newMat.amb = temp_v;
+
+				getline(input, buffer);
+				line2 >> temp >> f1 >> f2 >> f3;
+				temp_v.x = atof(f1.c_str());
+				temp_v.y = atof(f2.c_str());
+				temp_v.z = atof(f3.c_str());
+				newMat.spec = temp_v;
+			}	
 		}
 	}
 }
