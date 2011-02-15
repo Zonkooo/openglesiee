@@ -40,20 +40,42 @@ Object3D& Object3D::operator=(const Object3D &o){
 
 void Object3D::draw(){
 	vec3 tmp;
+	Material *curMat;
 
-	glPushMatrix();
+    glPushMatrix();
     glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);
-    //glBindTexture(GL_TEXTURE_2D, 0);
-	//printf("couleur : %f %f %f\n", m_c.x, m_c.y, m_c.z);
-	//glColor3f(m_c.x, m_c.y, m_c.z);
-	glBindTexture(GL_TEXTURE_2D, m_texture);
+    glBindTexture(GL_TEXTURE_2D,0);
 
 	for(unsigned int i = 0 ; i < m_triangleArray.size() ; i++){
+
+		for(unsigned int k = 0; k < m_materialArray.size() ; k++)
+        {
+       	    if((unsigned int)m_materialArray[k].firstVertice == i)
+       	    {
+				/*glColor3f(m_materialArray[k].diffu.x, m_materialArray[k].diffu.y, m_materialArray[k].diffu.z);
+				glDisable(GL_COLOR_MATERIAL);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, &m_materialArray[k].amb.x);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, &m_materialArray[k].diffu.x);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, &m_materialArray[k].spec.x);
+				glMateriali(GL_FRONT_AND_BACK, GL_SHININESS, m_materialArray[k].Ns);*/
+
+        	    if(m_materialArray[k].tex)
+        	    	glBindTexture(GL_TEXTURE_2D, m_materialArray[k].m_texture);
+        	    curMat = &m_materialArray[k];
+        	    break;
+            }
+        }
+
 		glBegin(GL_TRIANGLES);
 		for(int j = 0 ; j < 3 ; j++){
-			tmp = m_vertexArray.at(m_triangleArray[i].TexCoord[j]);
-			glTexCoord2f(tmp.x, tmp.y);
+			/*if(curMat->tex)
+			{
+	printf("truc0\n");
+				tmp = m_vertexArray.at(m_triangleArray[i].TexCoord[j]);
+				glTexCoord2f(tmp.x, tmp.y);
+			}*/
+
 			tmp = m_vertexArray.at(m_triangleArray[i].Vertex[j]);
 			glVertex3f(tmp.x+m_pos.x, tmp.y+m_pos.y, tmp.z+m_pos.z);
 		}
@@ -73,7 +95,7 @@ void Object3D::setPos(vec3 *p)
 	m_pos = *p;
 }
 
-void Object3D::loadTexture(char* fileName)
+/*void Object3D::loadTexture(char* fileName)
 {
 	// open file
 	tgaInfo* tex = tgaLoad(fileName);
@@ -95,5 +117,5 @@ void Object3D::loadTexture(char* fileName)
 
 	// memory cleaning
 	tgaDestroy(tex);
-}
+}*/
 
