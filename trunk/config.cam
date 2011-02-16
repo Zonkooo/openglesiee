@@ -1,0 +1,8 @@
+#camera config file
+# seconde deplacement angle haut bas  angle droite gauche
+0	0	0	0
+2	0	90	0
+3	50.0	0	0
+4	-30	-90.0	0.0
+15	150	45	180
+25	100	-60	75
