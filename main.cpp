@@ -535,14 +535,19 @@ void renderScene(void)
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture (GL_TEXTURE_CUBE_MAP, texid);
-	glUniform1i(glGetUniformLocation(programobject, "sky"), 0); 
-	
+	glUniform1i(glGetUniformLocation(programobject, "sky"), 0);	
 	glUniformMatrix4fv(glGetUniformLocation(programobject, "cam_to_scene"), 1, false, modelview);
+	glUniform1i(glGetUniformLocation(programobject, "time"), time_current);
 		
-	glBegin(GL_POLYGON);
+	glBegin(GL_QUADS);
+		glNormal3f(0.0f,1.0f,0.0f);
+		glMultiTexCoord2f(GL_TEXTURE0, 0.0f, 0.0f);
 		glVertex3f(-150.0f, 10.0f, -250.0f);
+		glMultiTexCoord2f(GL_TEXTURE0, 0.0f, 1.0f);
 		glVertex3f(-150.0f, 10.0f,  -50.0f);
+		glMultiTexCoord2f(GL_TEXTURE0, 1.0f, 1.0f);
 		glVertex3f( 150.0f, 10.0f,  -50.0f);
+		glMultiTexCoord2f(GL_TEXTURE0, 1.0f, 0.0f);
 		glVertex3f( 150.0f, 10.0f, -250.0f);
 	glEnd();
 	

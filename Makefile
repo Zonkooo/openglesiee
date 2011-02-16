@@ -20,7 +20,7 @@ SRC= $(wildcard *.cpp)
 OBJ= $(SRC:.cpp=.o)
 
 $(EXE) : $(OBJ)
-	$(CXX) $^ $(LDFLAGS) -o $(EXE)
+	$(CXX) $^ $(LDFLAGS) -o $(EXE) $(EXTRA)
 
 #dependances des .h
 main.o : terrain.h tga.h main.h shaders.h

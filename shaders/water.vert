@@ -1,6 +1,6 @@
-varying vec3 N;
-varying vec3 V;
-varying vec3 S;
+varying vec3 N; //normale
+varying vec3 V; //view (vecteur scene-œuil)
+varying vec3 S; //reflexion parfaite
 varying vec3 view;
 
 uniform mat4 cam_to_scene;
@@ -31,14 +31,10 @@ void main(void)
     
 	vec3 N = normalize(gl_NormalMatrix * gl_Normal);
 	vec4 P = gl_ModelViewMatrix * gl_Vertex;
-	vec3 V = normalize(-P.xyz/P.w);
+	vec3 V = normalize(-P.xyz/P.w); 
 	
 	S = 2.0 * N * dot(V, N) - V;
 	mat3 cam_to_scene3x3 = GetLinearPart(cam_to_scene);
 	S = normalize(cam_to_scene3x3 * S); 
-
-	// vecteur observateur
-	// view = point_courant - position_camera
-	view = vec3(gl_Vertex.xyz - gl_Position.xyz);
 }
 
