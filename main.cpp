@@ -7,8 +7,6 @@
 #include "tga.h"
 #include "terrain.h"
 
-#define MANUALCAM
-
 // atoi générique
 template <class T>
 bool from_string(T& t, 
@@ -476,9 +474,10 @@ void renderScene(void)
 	gluLookAt(x, y, z, 
 			  x + 10*lx,y + 10*ly,z + 10*lz,
 			  0.0f,1.0f,0.0f);
+#endif
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#endif
+	
 	//lights	
 	if (lighting)
 	{
@@ -499,7 +498,7 @@ void renderScene(void)
 	}
 
 	glColor3f(1,1,1);
-	
+		
 	//draw sky
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -510,15 +509,15 @@ void renderScene(void)
 	//import de porc
 	//printf("affichage d'un fichier obj\n");
     glMatrixMode(GL_MODELVIEW);
-    glScalef(0.1f, 0.1f, 0.1f);
+    glPushMatrix();
+		glScalef(0.1f, 0.1f, 0.1f);
 		glTranslatef(0.0f, 36.f, -1000.f);
 			glDisable(GL_CULL_FACE);
 				glDisable(GL_LIGHTING);
 					obj.draw();
 				glEnable(GL_LIGHTING);
 			glEnable(GL_CULL_FACE);
-		glTranslatef(0.0f, -36.f, 1000.f);
-    glScalef(10.f, 10.f, 10.f);
+	glPopMatrix();
     glFlush();
 	//printf("draw obj fini\n");
 
