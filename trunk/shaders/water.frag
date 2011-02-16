@@ -11,10 +11,10 @@ void main(void)
 {
 	float x = gl_TexCoord[0].x;
 	float y = gl_TexCoord[0].y;
-	S.x += 0.1*cos(0.001*time + (x + y) * 100.);
-	S.z += gl_TexCoord[0].z;
+	S.x += 0.05*cos(0.001*time + x * 87. + y * 37.);
+	S.x += 0.07*sqrt(1.5+sin(0.001*time + y * 244. + x * 79.));
 	S = normalize(S);
-	vec3 water_color = reflect*textureCube(sky, S).rgb + (1.0 - reflect)*vec3(0.0, 0.0, 1.0);
+	vec3 water_color = reflect*textureCube(sky, S).rgb + (1.0 - reflect)*vec3(0.07, 0.04, 0.56); //ultramarine !
 	
 	gl_FragColor.rgb = water_color;
 }
