@@ -34,6 +34,27 @@ int bla = 0;
 
 GLuint texid = 0; //textures du ciel
 
+// camera 
+//typedef struct cameraMvt;
+
+struct cameraMvt {
+	int time;
+	float moveFrontBack;
+	float rotUpDown;
+	float rotLeftRight;
+};
+
+float xpos = 0, ypos = 0, zpos = 0, xrot = 0, yrot = 0;
+int camTimeVar=0;
+int mvtStartTime = 0;
+int mvtPtr = 0;
+
+cameraMvt mvtTab[1024];
+
+std::ifstream camFile;
+std::string camFileLine;
+
+
 // stuff for lighting
 GLfloat lAmbient[] = {0.2,0.2,0.2,1.0};
 GLfloat lDiffuse[] = {1.0,1.0,1.0,1.0};
