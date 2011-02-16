@@ -522,6 +522,7 @@ void renderScene(void)
 	//printf("draw obj fini\n");
 
 	//Draw ground
+    glEnable(GL_COLOR_MATERIAL);
 	glCallList(terrainDL);
 	
 	//build de la matrice modelview
