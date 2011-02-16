@@ -7,7 +7,7 @@
 #include "tga.h"
 #include "terrain.h"
 
-// template ////
+// atoi générique
 template <class T>
 bool from_string(T& t, 
                  const std::string& s, 
@@ -455,27 +455,28 @@ void renderBitmapString(float x, float y, void *font,char *string)
 void renderScene(void) 
 {	
 	//camera
+#ifndef MANUALCAM
 	cameraManager(time_current);
 	camera();
 	glLoadIdentity();
 	camera();
-	
-//	if (deltaMove)
-//	{
-//		moveMeFlat(deltaMove);
-//	}
-//	if (deltaAngle) 
-//	{
-//		angle += deltaAngle;
-//		orientMe(angle);
-//	}
-//	glLoadIdentity();
-//	gluLookAt(x, y, z, 
-//			  x + 10*lx,y + 10*ly,z + 10*lz,
-//			  0.0f,1.0f,0.0f);
+#else
+	if (deltaMove)
+	{
+		moveMeFlat(deltaMove);
+	}
+	if (deltaAngle) 
+	{
+		angle += deltaAngle;
+		orientMe(angle);
+	}
+	glLoadIdentity();
+	gluLookAt(x, y, z, 
+			  x + 10*lx,y + 10*ly,z + 10*lz,
+			  0.0f,1.0f,0.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+#endif
 	//lights	
 	if (lighting)
 	{
