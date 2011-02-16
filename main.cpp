@@ -7,6 +7,18 @@
 #include "tga.h"
 #include "terrain.h"
 
+// template ////
+template <class T>
+bool from_string(T& t, 
+                 const std::string& s, 
+                 std::ios_base& (*f)(std::ios_base&))
+{
+	std::istringstream iss(s);
+	return !(iss >> f >> t).fail();
+}
+
+////
+
 void drawCubeMap(float size)
 {
 	static GLfloat xPlane[] = { 1.0f, 0.0f, 0.0f, 0.0f };
@@ -254,6 +266,135 @@ void initScene()
 	#endif
 }
 
+//camera thib
+
+void loadCamMvt(char* fileName)
+{
+	std::string tempString;
+	
+	
+	int strPtr, strPtr2;
+	int tabPtr = 0;
+	
+	camFile.open(fileName);
+	camFile.is_open();
+	
+	if(camFile.fail())
+		return;
+	
+	while (1) 
+	{
+		getline(camFile, camFileLine);
+		if(camFile.eof())
+			break;
+		
+		if(camFileLine[0]=='#') //comments
+			continue;
+			
+		std::stringstream str;
+		strPtr=0;
+		strPtr2=0;
+		
+		
+		while (camFileLine[strPtr]!='\t') {
+			strPtr++;
+		}
+		from_string<int>(mvtTab[tabPtr].time, camFileLine.substr(0,strPtr), std::dec);
+		mvtTab[tabPtr].time = 1000 * mvtTab[tabPtr].time;
+		
+		strPtr2 = ++ strPtr;
+		
+		while (camFileLine[strPtr]!='\t') {
+			strPtr++;
+		}
+		from_string<float>(mvtTab[tabPtr].moveFrontBack, camFileLine.substr(strPtr2,strPtr-strPtr2), std::dec);
+		
+		strPtr2 = ++ strPtr;
+		
+		while (camFileLine[strPtr]!='\t') {
+			strPtr++;
+		}
+		from_string<float>(mvtTab[tabPtr].rotUpDown, camFileLine.substr(strPtr2,strPtr-strPtr2), std::dec);
+		
+		strPtr2 = ++ strPtr;
+		
+		while (camFileLine[strPtr]!='\t' && camFileLine[strPtr]!='\0') { 
+			strPtr++;
+		}
+		from_string<float>(mvtTab[tabPtr].rotLeftRight, camFileLine.substr(strPtr2,strPtr-strPtr2), std::dec);
+		
+		//tempString = camFileLine.substr(strPtr2,strPtr-strPtr2);
+		//std::cout << tempString << std::endl;
+	
+		//from_string<int>(mvtTab[tabPtr].time, camFileLine.substr(0,strPtr), std::dec);
+		//from_string<float>(mvtTab[tabPtr].moveFrontBack, camFileLine.substr(strPtr2,strPtr-strPtr2), std::dec);
+		
+		//tempString = camFileLine.substr(strPtr2,strPtr-strPtr2);
+		//str << tempString;
+		//str >> mvtTab[tabPtr].time;
+		
+		//std::cout << mvtTab[tabPtr].time << std::endl;
+		
+		tabPtr++;
+	}
+	
+	printf("next\n");
+	for (int i = 0; i<10; i++) {
+		std::cout << mvtTab[i].time << '\t' << mvtTab[i].moveFrontBack << '\t' << mvtTab[i].rotUpDown << '\t' << mvtTab[i].rotLeftRight << std::endl;
+	}
+	
+	
+}
+
+void camera (void) {
+	
+    glRotatef(xrot,1.0,0.0,0.0);  //rotate cam left and right
+    glRotatef(yrot,0.0,1.0,0.0);  //rotate cam up and down
+    glTranslated(-xpos,-ypos,-zpos); //translate cam
+	
+}
+
+void moveCamera(float moveFrontBack, float rotUpDown, float rotLeftRight)
+{
+	float xrotrad, yrotrad;
+	yrotrad = (yrot / 180 * 3.141592654f);
+	xrotrad = (xrot / 180 * 3.141592654f); 
+	xpos += moveFrontBack*float(sin(yrotrad)) ;
+	zpos -= moveFrontBack*float(cos(yrotrad)) ;
+	ypos -= moveFrontBack*float(sin(xrotrad)) ;
+	
+	
+	xrot -= rotUpDown;
+	if (xrot >360) xrot -= 360;
+	else if (xrot < -360) xrot += 360;
+	
+	yrot -= rotLeftRight;
+	if (yrot >360) yrot -= 360;
+	else if (yrot < -360)yrot += 360;
+}
+
+void cameraManager(int simTime)
+{
+	if(simTime >= mvtTab[mvtPtr].time)
+	{
+		mvtPtr++;
+		//std::cout << "changement de mouvement : " << simTime << std::endl;
+	}
+	int timeDelta = simTime - camTimeVar;
+	//printf("%d\n",timeDelta);
+	float flatmvt = (timeDelta * mvtTab[mvtPtr].moveFrontBack)/(mvtTab[mvtPtr].time - simTime);
+	float vertrot = (timeDelta * mvtTab[mvtPtr].rotUpDown)/(mvtTab[mvtPtr].time - simTime);
+	float flatrot = (timeDelta * mvtTab[mvtPtr].rotLeftRight)/(mvtTab[mvtPtr].time - simTime);
+	moveCamera(flatmvt,vertrot,flatrot);
+	
+	mvtTab[mvtPtr].moveFrontBack -= flatmvt;
+	mvtTab[mvtPtr].rotUpDown	-= vertrot;
+	mvtTab[mvtPtr].rotLeftRight -= flatrot;
+	
+		
+	camTimeVar = simTime;
+}
+
 void orientMe(float ang) 
 {
 
@@ -314,19 +455,24 @@ void renderBitmapString(float x, float y, void *font,char *string)
 void renderScene(void) 
 {	
 	//camera
-	if (deltaMove)
-	{
-		moveMeFlat(deltaMove);
-	}
-	if (deltaAngle) 
-	{
-		angle += deltaAngle;
-		orientMe(angle);
-	}
+	cameraManager(time_current);
+	camera();
 	glLoadIdentity();
-	gluLookAt(x, y, z, 
-			  x + 10*lx,y + 10*ly,z + 10*lz,
-			  0.0f,1.0f,0.0f);
+	camera();
+	
+//	if (deltaMove)
+//	{
+//		moveMeFlat(deltaMove);
+//	}
+//	if (deltaAngle) 
+//	{
+//		angle += deltaAngle;
+//		orientMe(angle);
+//	}
+//	glLoadIdentity();
+//	gluLookAt(x, y, z, 
+//			  x + 10*lx,y + 10*ly,z + 10*lz,
+//			  0.0f,1.0f,0.0f);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -451,6 +597,46 @@ static void idleGL(void)
 
 void processNormalKeys(unsigned char key, int x, int y) 
 {
+	// camera //
+	
+	
+	if (key == 'f') //down
+	{	
+
+		moveCamera(0,-1,0);
+	
+	}
+	
+	if (key == 'r') //up
+	{
+
+			moveCamera(0,1,0);
+	
+	}
+	
+	if (key == 'z') //front
+	{
+		moveCamera(1,0,0);
+
+	}
+	
+	if (key == 's') //back
+	{
+		moveCamera(-1,0,0);
+		
+	}
+	
+	if (key == 'd') //right
+	{
+			moveCamera(0,0,-1);
+			
+	}
+	
+	if (key == 'q') //left
+	{
+			moveCamera(0,0,1);
+	}
+	
 	if (key == 27) 
 	{
 		terrainDestroy();
@@ -623,6 +809,7 @@ void releaseKey(int key, int x, int y)
 void activeMouseMotion(int x, int y) 
 {
 	angle2 = angle + (x-deltaX)*0.001;
+
 	angle2Y = angleY + (y-deltaY) * 0.001;
 	if (angle2Y > 1.57)
 		angle2Y = 1.57;
@@ -670,6 +857,7 @@ void init()
 
 int main(int argc, char **argv)
 {
+	loadCamMvt((char*)"config.cam");
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
