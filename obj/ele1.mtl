@@ -12,8 +12,8 @@ newmtl 01___Default
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka elephent_map.jpg
-	map_Kd elephent_map.jpg
+	map_Ka elephent_map.tga
+	map_Kd elephent_map.tga
 
 newmtl 02___Default
 	Ns 24.0000
