@@ -1,27 +1,21 @@
 varying vec3 N;
 varying vec3 V;
 varying vec3 S;
-varying vec3 view;
 
 uniform samplerCube sky;
+uniform int time;
+
+float reflect = 0.6;
 
 void main(void)
 {
-	vec3 color;
-	vec3 water_color = (textureCube(sky, S).rgb + 0.5*vec3(0.0, 0.0, 1.0)) / 1.5;
+	float x = gl_TexCoord[0].x;
+	float y = gl_TexCoord[0].y;
+	S.x += 0.1*cos(0.001*time + (x + y) * 100.);
+	S.z += gl_TexCoord[0].z;
+	S = normalize(S);
+	vec3 water_color = reflect*textureCube(sky, S).rgb + (1.0 - reflect)*vec3(0.0, 0.0, 1.0);
 	
-/*	// lumiere ambiante*/
-/*	color = gl_LightSource[0].ambient * water_color;*/
-/*	*/
-/*	// diffus*/
-/*	vec3 i = gl_LightSource[0].position.xyz - V;*/
-/*	color += gl_LightSource[0].diffuse * water_color * max(0.0,dot(normalize(N), normalize(i)));*/
-/*  */
-/*	// speculaire*/
-/*	vec3 r = reflect(-i, N);*/
-/*	color += gl_LightSource[0].specular * water_color * pow(max(0.0,dot(normalize(-V), normalize(r))), gl_FrontMaterial.shininess); */
-
-/*	gl_FragColor.rgb = color;*/
 	gl_FragColor.rgb = water_color;
 }
 
