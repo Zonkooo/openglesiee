@@ -146,7 +146,7 @@ void initScene()
 	//obj.setColor(c);
 	vec3 *p = new vec3(200.0,0.0,0.0);
 	obj.setPos(p);
-//	obj.loadTexture((char*)"elephant_tex.tga");
+	obj.loadTextures();
 	printf("triangles : %d, vertex : %d\n", (int)obj.m_triangleArray.size(), (int)obj.m_vertexArray.size());
 	
 	//textures cubemap du ciel
@@ -459,7 +459,7 @@ void renderScene(void)
 	cameraManager(time_current);
 	camera();
 	glLoadIdentity();
-	camera();
+	camera();*/
 #else
 	if (deltaMove)
 	{

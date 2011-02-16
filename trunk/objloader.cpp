@@ -53,7 +53,6 @@ void ObjLoader::readData(void){
 		std::string f1, f2, f3;
 		vec3 temp_n, temp_v, temp_t;
 		Triangle temp_f;
-		cpt++;
 
 		if(buffer.substr(0,2) == "vn"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -78,10 +77,6 @@ void ObjLoader::readData(void){
 		else if(buffer.substr(0,6) == "usemtl"){
 			line >> temp >> f1;
 			readMtl(f1, cpt);
-			Material temp_m;
-			temp_m.name = f1;
-			m_obj->m_materialArray.push_back(temp_m);
-            m_obj->m_materialArray[m_obj->m_materialArray.size()-1].firstVertice = cpt;
 		}
 		else if(buffer.substr(0,1) == "f"){
 			line >> temp >> f1 >> f2 >> f3;
@@ -104,6 +99,7 @@ void ObjLoader::readData(void){
 				read_face(2, start, end, f3, temp_f);
 
 			m_obj->m_triangleArray.push_back(temp_f);
+			cpt++;
 		}
 		else if(buffer.substr(0,6) == "mtllib"){
 			line >> temp >> f1;
@@ -133,16 +129,21 @@ void ObjLoader::readMtl(std::string mat, int cpt)
 			line >> temp >> f1;
 			if((strcmp(f1.c_str(), mat.c_str()) == 0))	
 			{
+				newMat.name = f1;
+				newMat.firstFace = cpt;
+
 				getline(input, buffer);
 				std::istringstream line2(buffer);
 				line2 >> temp >> f1;
 				newMat.Ns = atof(f1.c_str());
 
 				getline(input, buffer);
+				line2.str(buffer);
 				line2 >> temp >> f1;
 				newMat.Ni = atof(f1.c_str());
 
 				getline(input, buffer);
+				line2.str(buffer);
 				line2 >> temp >> f1;
 				newMat.d = atof(f1.c_str());
 
@@ -150,10 +151,12 @@ void ObjLoader::readMtl(std::string mat, int cpt)
 				getline(input, buffer);
 
 				getline(input, buffer);
+				line2.str(buffer);
 				line2 >> temp >> f1;
 				newMat.illum = atof(f1.c_str());
 
 				getline(input, buffer);
+				line2.str(buffer);
 				line2 >> temp >> f1 >> f2 >> f3;
 				temp_v.x = atof(f1.c_str());
 				temp_v.y = atof(f2.c_str());
@@ -161,6 +164,7 @@ void ObjLoader::readMtl(std::string mat, int cpt)
 				newMat.diffu = temp_v;
 
 				getline(input, buffer);
+				line2.str(buffer);
 				line2 >> temp >> f1 >> f2 >> f3;
 				temp_v.x = atof(f1.c_str());
 				temp_v.y = atof(f2.c_str());
@@ -168,11 +172,27 @@ void ObjLoader::readMtl(std::string mat, int cpt)
 				newMat.amb = temp_v;
 
 				getline(input, buffer);
+				line2.str(buffer);
 				line2 >> temp >> f1 >> f2 >> f3;
 				temp_v.x = atof(f1.c_str());
 				temp_v.y = atof(f2.c_str());
 				temp_v.z = atof(f3.c_str());
 				newMat.spec = temp_v;
+
+				getline(input, buffer);
+				getline(input, buffer);	
+				line2.str(buffer);
+				line2 >> temp >> f1 >> f2;
+				if(temp.substr(0,3) == "map")
+				{
+					newMat.texName = "obj/" + f1;
+					newMat.tex = true;
+				}
+				else{
+					newMat.tex = false;
+				}
+
+				m_obj->m_materialArray.push_back(newMat);
 			}	
 		}
 	}
