@@ -32,7 +32,7 @@ objloader.o : objloader.h object3d.h
 
 #cible générique
 %.o : %.cpp
-	$(CXX) -c $(CFLAGS) $< -o $@
+	$(CXX) -c $(CFLAGS) $< -o $@ $(EXTRA)
 	
 .PHONY : clean ultraclean
 
