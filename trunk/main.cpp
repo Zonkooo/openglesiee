@@ -7,6 +7,8 @@
 #include "tga.h"
 #include "terrain.h"
 
+#define MANUALCAM
+
 // atoi générique
 template <class T>
 bool from_string(T& t, 
@@ -459,7 +461,7 @@ void renderScene(void)
 	cameraManager(time_current);
 	camera();
 	glLoadIdentity();
-	camera();*/
+	camera();
 #else
 	if (deltaMove)
 	{
