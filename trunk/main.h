@@ -60,7 +60,7 @@ GLfloat lAmbient[] = {0.2,0.2,0.2,1.0};
 GLfloat lDiffuse[] = {1.0,1.0,1.0,1.0};
 GLfloat lSpecular[] = {1.0,1.0,1.0,1.0};
 
-GLfloat lPosition[] = {0.0, 100.0, 0.0, 0.0};
+GLfloat lPosition[] = {-250., 100.0, 200., 0.0};
 
 // materials
 GLfloat mSpecular[] = {0.0,0.0,0.0,0.0};
