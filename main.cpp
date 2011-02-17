@@ -576,9 +576,6 @@ void renderScene(void)
 	renderBitmapString(30,hauteur,(void *)font, (char*)"F1  - 640x480"); hauteur += 15;
 	renderBitmapString(30,hauteur,(void *)font, (char*)"F2  - 800x600"); hauteur += 15;
 	renderBitmapString(30,hauteur,(void *)font, (char*)"F3  - 1024x768"); hauteur += 15;
-	renderBitmapString(30,hauteur,(void *)font, (char*)"F10 - Simulate Lighting ON/OFF"); hauteur += 15;
-	renderBitmapString(30,hauteur,(void *)font, (char*)"F11 - OpenGL Lighting ON/OFF"); hauteur += 15;
-	renderBitmapString(30,hauteur,(void *)font, currentMode); hauteur += 15;
 	#ifdef CHECK_ERRORS
 		err = glGetError();
 		if(err!=GL_NO_ERROR){
@@ -736,41 +733,6 @@ void pressKey(int key, int x, int y)
 			}
 			else
 				glutGameModeString(gameModeString);
-			break;
-		case GLUT_KEY_F10:
-			simulateLighting = !simulateLighting;
-			terrainSimulateLighting(simulateLighting);
-			glDeleteLists(terrainDL,1);
-			if (simulateLighting)
-				lighting = 0;
-			if (lighting) 
-			{
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-			}
-			else 
-			{
-				glDisable(GL_LIGHT0);
-				glDisable(GL_LIGHTING);
-			}
-			terrainDL = terrainCreateDL(0,0,0,0);
-			break;
-		case GLUT_KEY_F11:
-			lighting = !lighting;
-			if (lighting) 
-			{
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-			}
-			else 
-			{
-				glDisable(GL_LIGHT0);
-				glDisable(GL_LIGHTING);
-			}
-			glDeleteLists(terrainDL,1);
-			if (lighting)
-				simulateLighting = 0;
-			terrainDL = terrainCreateDL(0,0,0,lighting);
 			break;
 		default :
 			printf("useless key pressed");
